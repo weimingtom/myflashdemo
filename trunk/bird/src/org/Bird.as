@@ -10,6 +10,7 @@
 		public function Bird(){
 			init();
 
+
 		}
 		
 		private function init():void{
