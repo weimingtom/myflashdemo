@@ -4,9 +4,9 @@
 	import flash.net.Socket;
 
 	class Man extends Sprite{
-		private var socket:Socket = new Socket();
+		var socket:Socket;
 		var serverURL:String = "localhost";
-		var portNumber:int = 4567;		
+		var portNumber:int = 8821;		
 		
 		var _speed = 15;
 		var _x : int= 30 ;//初始x坐标
@@ -28,20 +28,39 @@
 		//var _hit : Hit = new Hit();//打
 		var _hitHand : HitHand = new HitHand();//出拳
 		var _hitLeg : HitLeg = new HitLeg();//出腿
+		
+		
+		
+//		private var actions:Array=new Array();
+//　　　　 actions.push("stand"); 
+//　　　　 actions.push("goRight"); 
+//　　　　 actions.push("goLeft"); 
+//　　　　 actions.push("hitHand");
+//		actions.push("hitLeg");
+//		actions.push("create");
+
+		
 		public function Man(){
 			
-			stand();
-			
-			this.socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);   
-			try {    
-                this.socket.connect(serverURL,portNumber);   
-            }   
-            catch (error:Error){     
-                this.socket.close();   
-            }   
+			init();
 
 		}
 		
+		private function init():void{
+
+			
+			socket = new Socket();
+			try {    
+                socket.connect(serverURL,portNumber); 
+                socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);   
+            }   
+            catch (error:Error){     
+                socket.close();   
+            }   
+			stand(true);
+			
+			
+		}
 		
 		/**取消掉其他所有的动作*/
 		public function removeAllScript(){
@@ -54,20 +73,21 @@
 			_hitLeg.visible = false ;
 		}
 		
-		public function stand(){
+		public function stand(self:Boolean){
 			_stand.visible = true ;
 			_stand.x = _x;
 			_stand.y= _y;
 			
-			this.socket.writeUTF("stand");   
-            this.socket.flush();
-			
+			if(self){
+				socket.writeUTF("stand");   
+	            socket.flush();
+			}
 			addChild(_stand);
 			
 			
 		}
 		
-		public function goRight(){
+		public function goRight(self:Boolean){
 
 			if( (_x + _speed )<  _maxX ){
 				_x = _x + _speed;
@@ -77,14 +97,16 @@
 			_goRight.x = _x;
 			_goRight.y = _y;
 			
-			this.socket.writeUTF("goRight");   
-            this.socket.flush();
+			if(self){
+				socket.writeUTF("goRight");   
+	            socket.flush();
+			}
 			
 			addChild(_goRight);
 			
 		}
 		
-		public function goLeft(){
+		public function goLeft(self:Boolean){
 			
 			if( (_x - _speed )>  _minX ){
 				_x = _x - _speed;
@@ -94,33 +116,39 @@
 			_goLeft.x = _x;
 			_goLeft.y = _y;
 			
-			this.socket.writeUTF("goLeft");   
-            this.socket.flush();
+			if(self){
+				socket.writeUTF("goLeft");   
+	            socket.flush();
+			}
 			
 			addChild(_goLeft);0
 		}
 		
-		public function hitHand(){
+		public function hitHand(self:Boolean){
 			
 			_hitHand.visible = true ;
 			_hitHand.x = _x;
 			_hitHand.y = _y;
 			
-			this.socket.writeUTF("hitHand");   
-            this.socket.flush();
+			if(self){
+				socket.writeUTF("hitHand");   
+	            socket.flush();
+			}
 			
 			addChild(_hitHand);
 			
 		}
 		
-		public function hitLeg(){
+		public function hitLeg(self:Boolean){
 			
 			_hitLeg.visible = true ;
 			_hitLeg.x = _x;
 			_hitLeg.y = _y;
 			
-			this.socket.writeUTF("hitLeg");   
-            this.socket.flush();
+			if(self){
+				socket.writeUTF("hitLeg");   
+	            socket.flush();
+			}
 			
 			addChild(_hitLeg);
 			
@@ -128,25 +156,24 @@
 		
 		/**键盘事件处理*/
 		public function eventListen(en:KeyboardEvent){
-			trace(en.keyCode);
 			if(en.keyCode == _right){
 				removeAllScript();
-				goRight();
+				goRight(true);
 			}
 			
 			if(en.keyCode == _left){
 				removeAllScript();
-				goLeft();
+				goLeft(true);
 			}
 			
 			if(en.keyCode == _hitHandCode){
 				removeAllScript();
-				hitHand();
+				hitHand(true);
 			}
 			
 			if(en.keyCode == _hitLegCode){
 				removeAllScript();
-				hitLeg();
+				hitLeg(true);
 			}
 			
 		}
@@ -154,11 +181,32 @@
 		/**键盘松掉事件处理*/
 		public function eventUpListen(en:KeyboardEvent){
 			removeAllScript();
-			stand();
+			stand(true);
 		}
 
 		private function dataHandler(event:ProgressEvent):void {   
-           trace(this.socket.readUTF());
+           var action:String = socket.readUTF();
+           trace(action);
+           if(action=="stand"){
+           	  removeAllScript();
+           	  stand(false);
+           }else if(action=="goRight"){
+           	  removeAllScript();
+              goRight(false);
+           }else if(action=="goLeft"){
+           	  removeAllScript();
+           	  goLeft(false);
+           }else if(action=="hitHand"){
+           	  removeAllScript();
+           	  hitHand(false);
+           }else if(action=="hitLeg"){
+           	  removeAllScript();
+           	  hitLeg(false);
+           }else{
+           
+           }
+           
+           
         }   
 		
 	}
