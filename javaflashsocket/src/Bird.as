@@ -1,16 +1,18 @@
 ﻿package {
+	import com.klstudio.data.map.HashMap;
+	
 	import flash.display.Sprite;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.net.Socket;
 
 	public class Bird extends Sprite{
 		
-		public static var mans:Array=new Array();
+		public static var hashMap:HashMap = new HashMap();
+		private var serverUrl:String ="192.168.0.243";
+		private var socket:Socket ;
 		
 		public function Bird(){
 			init();
-
-
 		}
 		
 		private function init():void{
@@ -22,8 +24,11 @@
 			sb.x=0;
 			sb.y=0;
 			
-			var tmpMan : Man = new Man();
-			mans.push(tmpMan);
+			socket = new Socket(serverUrl,8821);
+						
+			var tmpMan : Man = new Man(socket);
+			KeyListener.init(stage,tmpMan.eventHandler);
+			hashMap.put(serverUrl,tmpMan);
 			
 			stage.addEventListener(MouseEvent.CLICK,beginG);
 			
@@ -38,32 +43,26 @@
 		
 		private function beginG(e:MouseEvent):void{
 			
-			for(var i:int=0;i<mans.length;i++){ 
-			
-					var man : Man = mans[i] ;
+			for each(var man:Man in hashMap.values()){ 
+					var base:int =	Math.floor(Math.random()*200);
+					man.setX(man.getX()+base);
 					addChild(man);
-					stage.addEventListener(KeyboardEvent.KEY_DOWN,man.eventListen);
-					stage.addEventListener(KeyboardEvent.KEY_UP,man.eventUpListen);
-				
 			}
-		
-		
 		}
-		
-//		public static function addMan(man:Man):void{
-////			
-////			addChild(man);
-////			stage.addEventListener(KeyboardEvent.KEY_DOWN,man.eventListen);
-////			stage.addEventListener(KeyboardEvent.KEY_UP,man.eventUpListen);
-//		}
-		
-		
-		
 	}
-	
-	
-	
 
-	
-	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

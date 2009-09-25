@@ -1,16 +1,18 @@
 ﻿package {
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.*;
 	import flash.net.Socket;
+	import flash.utils.ByteArray;
 
 	class Man extends Sprite{
-		var socket:Socket;
-		var serverURL:String = "localhost";
-		var portNumber:int = 8821;		
 		
-		var _speed = 15;
-		var _x : int= 30 ;//初始x坐标
-		var _y : int = 250;//初始y坐标
+		var _stage :Stage;
+		private var _socket:Socket;
+		
+		var _speed = 4;
+		private var _x : int= 30 ;//初始x坐标
+		private var _y : int = 250;//初始y坐标
 		
 		var _maxX:int = 550 - 80 ;
 		var _minX:int = 30 ;
@@ -25,37 +27,26 @@
 		var _stand : Stand = new Stand();;//站立状态
 		var _goRight : GoRight = new GoRight();;//向右走
 		var _goLeft : GoLeft = new GoLeft();//左走
-		//var _hit : Hit = new Hit();//打
-		var _hitHand : HitHand = new HitHand();//出拳
-		var _hitLeg : HitLeg = new HitLeg();//出腿
+		
+//		var _hitHand : HitHand = new HitHand();//出拳
+//		var _hitLeg : HitLeg = new HitLeg();//出腿
 		
 		
 		
-//		private var actions:Array=new Array();
-//　　　　 actions.push("stand"); 
-//　　　　 actions.push("goRight"); 
-//　　　　 actions.push("goLeft"); 
-//　　　　 actions.push("hitHand");
-//		actions.push("hitLeg");
-//		actions.push("create");
-
-		
-		public function Man(){
+		public function Man(socket:Socket){
 			
-			init();
+			init(socket);
 
 		}
 		
-		private function init():void{
+		private function init(socket:Socket):void{
 
-			
-			socket = new Socket();
+			this._socket = socket;
 			try {    
-                socket.connect(serverURL,portNumber); 
-                socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);   
+                this._socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler); 
             }   
             catch (error:Error){     
-                socket.close();   
+                this._socket.close();   
             }   
 			stand(true);
 			
@@ -69,18 +60,18 @@
 			_goRight.visible = false ;
 			
 
-			_hitHand.visible = false;
-			_hitLeg.visible = false ;
+//			_hitHand.visible = false;
+//			_hitLeg.visible = false ;
 		}
 		
 		public function stand(self:Boolean){
+			
 			_stand.visible = true ;
 			_stand.x = _x;
 			_stand.y= _y;
 			
 			if(self){
-				socket.writeUTF("stand");   
-	            socket.flush();
+				write("stand");   
 			}
 			addChild(_stand);
 			
@@ -88,7 +79,6 @@
 		}
 		
 		public function goRight(self:Boolean){
-
 			if( (_x + _speed )<  _maxX ){
 				_x = _x + _speed;
 			}
@@ -98,8 +88,7 @@
 			_goRight.y = _y;
 			
 			if(self){
-				socket.writeUTF("goRight");   
-	            socket.flush();
+				write("goRight");   
 			}
 			
 			addChild(_goRight);
@@ -117,76 +106,89 @@
 			_goLeft.y = _y;
 			
 			if(self){
-				socket.writeUTF("goLeft");   
-	            socket.flush();
+				write("goLeft");   
 			}
 			
 			addChild(_goLeft);0
 		}
 		
-		public function hitHand(self:Boolean){
-			
-			_hitHand.visible = true ;
-			_hitHand.x = _x;
-			_hitHand.y = _y;
-			
-			if(self){
-				socket.writeUTF("hitHand");   
-	            socket.flush();
-			}
-			
-			addChild(_hitHand);
-			
-		}
-		
-		public function hitLeg(self:Boolean){
-			
-			_hitLeg.visible = true ;
-			_hitLeg.x = _x;
-			_hitLeg.y = _y;
-			
-			if(self){
-				socket.writeUTF("hitLeg");   
-	            socket.flush();
-			}
-			
-			addChild(_hitLeg);
-			
-		}
-		
-		/**键盘事件处理*/
-		public function eventListen(en:KeyboardEvent){
-			if(en.keyCode == _right){
-				removeAllScript();
-				goRight(true);
-			}
-			
-			if(en.keyCode == _left){
-				removeAllScript();
-				goLeft(true);
-			}
-			
-			if(en.keyCode == _hitHandCode){
-				removeAllScript();
-				hitHand(true);
-			}
-			
-			if(en.keyCode == _hitLegCode){
-				removeAllScript();
-				hitLeg(true);
-			}
-			
-		}
-		
-		/**键盘松掉事件处理*/
-		public function eventUpListen(en:KeyboardEvent){
-			removeAllScript();
-			stand(true);
-		}
+//		public function hitHand(self:Boolean){
+//			
+//			_hitHand.visible = true ;
+//			_hitHand.x = _x;
+//			_hitHand.y = _y;
+//			
+//			if(self){
+//				write("hitHand");   
+//			}
+//			
+//			addChild(_hitHand);
+//			
+//		}
+//		
+//		public function hitLeg(self:Boolean){
+//			
+//			_hitLeg.visible = true ;
+//			_hitLeg.x = _x;
+//			_hitLeg.y = _y;
+//			
+//			if(self){
+//				write("hitLeg");   
+//			}
+//			
+//			addChild(_hitLeg);
+//			
+//		}
+//		
+//		/**键盘事件处理*/
+//		public function eventListen(en:KeyboardEvent){
+//			if(en.keyCode == _right){
+//				removeAllScript();
+//				goRight(true);
+//			}
+//			
+//			if(en.keyCode == _left){
+//				removeAllScript();
+//				goLeft(true);
+//			}
+//			
+//			if(en.keyCode == _hitHandCode){
+//				removeAllScript();
+//				hitHand(true);
+//			}
+//			
+//			if(en.keyCode == _hitLegCode){
+//				removeAllScript();
+//				hitLeg(true);
+//			}
+//			
+//		}
+//		
+//		/**键盘松掉事件处理*/
+//		public function eventUpListen(en:KeyboardEvent){
+//			removeAllScript();
+//			stand(true);
+//		}
 
-		private function dataHandler(event:ProgressEvent):void {   
-           var action:String = socket.readUTF();
-           trace(action);
+
+
+		function eventHandler(e:Event):void{
+		//使用的时候这里加个判断就可以根据不同方向进行不同操作了
+		var action:uint = KeyListener.getDirection();
+			trace(action);
+          if(action==3){
+           	  removeAllScript();
+              goRight(false);
+           }else if(action==7){
+           	  removeAllScript();
+           	  goLeft(false);
+           }else{
+           
+           }
+		}
+	
+		private function dataHandler(event:ProgressEvent):void {
+           var action:String = read();
            if(action=="stand"){
            	  removeAllScript();
            	  stand(false);
@@ -196,18 +198,76 @@
            }else if(action=="goLeft"){
            	  removeAllScript();
            	  goLeft(false);
-           }else if(action=="hitHand"){
-           	  removeAllScript();
-           	  hitHand(false);
-           }else if(action=="hitLeg"){
-           	  removeAllScript();
-           	  hitLeg(false);
+//           }else if(action=="hitHand"){
+//           	  removeAllScript();
+//           	  hitHand(false);
+//           }else if(action=="hitLeg"){
+//           	  removeAllScript();
+//           	  hitLeg(false);
            }else{
            
            }
            
            
         }   
+        
+        
+        
+        private function write(str:String):void{
+        	var ba:ByteArray = new ByteArray();   
+            //将得到的信息写入ba中   
+            ba.writeMultiByte(str + "\n","UTF-8");     
+            //通过连接写入socket中   
+			this._socket.writeBytes(ba);
+			this._socket.flush();
+        }
 		
+		private function read():String{
+			
+			var bytes : ByteArray = new ByteArray () ;
+			
+			var msgLen: int = this._socket.bytesAvailable;
+			
+			this._socket.readBytes(bytes,0,msgLen);
+			
+			return bytes.toString();
+		}
+
+
+
+
+		public function getSocket():Socket
+		{
+			return _socket;
+		}
+
+		public function setSocket(v:Socket):void
+		{
+			_socket = v;
+		}
+
+		public function getX():int
+		{
+			return _x;
+		}
+
+		public function setX(v:int):void
+		{
+			_x = v;
+		}
+
+		public function getY():int
+		{
+			return _y;
+		}
+
+		public function setY(v:int):void
+		{
+			_y = v;
+		}
+			
+
+        
+        
 	}
 }
