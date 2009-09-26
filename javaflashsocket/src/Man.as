@@ -197,7 +197,6 @@
            arr = str.split("-");
            var addr:String = arr[0];
            var action:String = arr[1];
-           
            var tmpMan :Man =Man(Bird.hashMap.get(addr));
            
            if(action=="stand"){

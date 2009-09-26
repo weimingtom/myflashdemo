@@ -34,9 +34,6 @@
 			
 			//stage.focus = man ;		
 			
-			
-			
-			
 		}
 		
 		
