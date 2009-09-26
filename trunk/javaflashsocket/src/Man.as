@@ -192,8 +192,7 @@
 		}
 	
 		private function dataHandler(event:DataEvent):void {
-           trace(event.data);
-           var str:String = event.toString();
+           var str:String = event.data;
            var arr:Array = new Array();
            arr = str.split("-");
            var addr:String = arr[0];
