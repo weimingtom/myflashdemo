@@ -3,13 +3,13 @@
 	
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import flash.net.Socket;
+	import flash.net.XMLSocket;
 
 	public class Bird extends Sprite{
 		
 		public static var hashMap:HashMap = new HashMap();
 		private var serverUrl:String ="192.168.0.243";
-		private var socket:Socket ;
+		private var socket:XMLSocket ;
 		
 		public function Bird(){
 			init();
@@ -24,7 +24,7 @@
 			sb.x=0;
 			sb.y=0;
 			
-			socket = new Socket(serverUrl,8821);
+			socket = new XMLSocket(serverUrl,8821);
 						
 			var tmpMan : Man = new Man(socket);
 			KeyListener.init(stage,tmpMan.eventHandler);
