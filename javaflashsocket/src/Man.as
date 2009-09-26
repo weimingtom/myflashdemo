@@ -44,6 +44,7 @@
 			this._socket = socket;
 			try {    
                 this._socket.addEventListener(DataEvent.DATA, dataHandler); 
+                this._socket.addEventListener(Event.CONNECT, onConnect );
             }   
             catch (error:Error){     
                 this._socket.close();   
@@ -51,6 +52,10 @@
 			stand(true);
 			
 			
+		}
+		
+		public function onConnect(e:Event){
+			trace("链接ok!");		
 		}
 		
 		/**取消掉其他所有的动作*/
@@ -187,8 +192,8 @@
 		}
 	
 		private function dataHandler(event:DataEvent):void {
+           trace(event.data);
            var str:String = event.toString();
-           
            var arr:Array = new Array();
            arr = str.split("-");
            var addr:String = arr[0];
