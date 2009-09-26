@@ -109,7 +109,7 @@
 				write("goLeft");   
 			}
 			
-			addChild(_goLeft);0
+			addChild(_goLeft);
 		}
 		
 //		public function hitHand(self:Boolean){
@@ -175,29 +175,40 @@
 		function eventHandler(e:Event):void{
 		//使用的时候这里加个判断就可以根据不同方向进行不同操作了
 		var action:uint = KeyListener.getDirection();
-			trace(action);
           if(action==3){
            	  removeAllScript();
-              goRight(false);
+              goRight(true);
            }else if(action==7){
            	  removeAllScript();
-           	  goLeft(false);
+           	  goLeft(true);
            }else{
            
            }
 		}
 	
 		private function dataHandler(event:ProgressEvent):void {
-           var action:String = read();
+           var str:String = read();
+           trace(str);
+           var arr:Array = new Array();
+           arr = str.split("-");
+           var addr:String = arr[0];
+           var action:String = arr[1];
+           
+           var tmpMan :Man =Man(Bird.hashMap.get(addr));
+           
+           trace(addr);
+           trace(action);
+           
            if(action=="stand"){
-           	  removeAllScript();
-           	  stand(false);
+           	  tmpMan.removeAllScript();
+           	  tmpMan.stand(false);
            }else if(action=="goRight"){
-           	  removeAllScript();
-              goRight(false);
+           	  trace(action);
+           	  tmpMan.removeAllScript();
+              tmpMan.goRight(false);
            }else if(action=="goLeft"){
-           	  removeAllScript();
-           	  goLeft(false);
+           	  tmpMan.removeAllScript();
+           	  tmpMan.goLeft(false);
 //           }else if(action=="hitHand"){
 //           	  removeAllScript();
 //           	  hitHand(false);
@@ -216,8 +227,9 @@
         private function write(str:String):void{
         	var ba:ByteArray = new ByteArray();   
             //将得到的信息写入ba中   
-            ba.writeMultiByte(str + "\n","UTF-8");     
+            ba.writeMultiByte(str,"UTF-8");     
             //通过连接写入socket中   
+
 			this._socket.writeBytes(ba);
 			this._socket.flush();
         }
@@ -238,32 +250,32 @@
 
 		public function getSocket():Socket
 		{
-			return _socket;
+			return this._socket;
 		}
 
 		public function setSocket(v:Socket):void
 		{
-			_socket = v;
+			this._socket = v;
 		}
 
 		public function getX():int
 		{
-			return _x;
+			return this._x;
 		}
 
 		public function setX(v:int):void
 		{
-			_x = v;
+			this._x = v;
 		}
 
 		public function getY():int
 		{
-			return _y;
+			return this._y;
 		}
 
 		public function setY(v:int):void
 		{
-			_y = v;
+			this._y = v;
 		}
 			
 
