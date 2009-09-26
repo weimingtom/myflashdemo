@@ -6,7 +6,7 @@
 	import flash.utils.ByteArray;
 
 	class Man extends Sprite{
-		
+		var _url:String = "192.168.0.243";
 		var _stage :Stage;
 		private var _socket:Socket;
 		
@@ -88,7 +88,7 @@
 			_goRight.y = _y;
 			
 			if(self){
-				write("goRight");   
+				write("goRight"); 
 			}
 			
 			addChild(_goRight);
@@ -176,11 +176,11 @@
 		//使用的时候这里加个判断就可以根据不同方向进行不同操作了
 		var action:uint = KeyListener.getDirection();
           if(action==3){
-           	  removeAllScript();
-              goRight(true);
+           	  Man(Bird.hashMap.get(_url)).removeAllScript();
+              Man(Bird.hashMap.get(_url)).goRight(true);
            }else if(action==7){
-           	  removeAllScript();
-           	  goLeft(true);
+           	  Man(Bird.hashMap.get(_url)).removeAllScript();
+           	  Man(Bird.hashMap.get(_url)).goLeft(true);
            }else{
            
            }
@@ -188,7 +188,7 @@
 	
 		private function dataHandler(event:ProgressEvent):void {
            var str:String = read();
-           trace(str);
+           
            var arr:Array = new Array();
            arr = str.split("-");
            var addr:String = arr[0];
@@ -196,16 +196,13 @@
            
            var tmpMan :Man =Man(Bird.hashMap.get(addr));
            
-           trace(addr);
-           trace(action);
-           
            if(action=="stand"){
            	  tmpMan.removeAllScript();
            	  tmpMan.stand(false);
            }else if(action=="goRight"){
-           	  trace(action);
            	  tmpMan.removeAllScript();
               tmpMan.goRight(false);
+              trace(action);
            }else if(action=="goLeft"){
            	  tmpMan.removeAllScript();
            	  tmpMan.goLeft(false);
