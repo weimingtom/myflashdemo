@@ -43,6 +43,7 @@
 		
 		private function beginG(e:MouseEvent):void{
 			
+			trace("当前有"+hashMap.size()+"个连接");
 			for each(var man:Man in hashMap.values()){ 
 //					var base:int =	Math.floor(Math.random()*300);
 //					man.setX(man.getX()+base);
