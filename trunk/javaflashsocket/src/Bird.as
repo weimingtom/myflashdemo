@@ -44,8 +44,8 @@
 		private function beginG(e:MouseEvent):void{
 			
 			for each(var man:Man in hashMap.values()){ 
-					var base:int =	Math.floor(Math.random()*200);
-					man.setX(man.getX()+base);
+//					var base:int =	Math.floor(Math.random()*300);
+//					man.setX(man.getX()+base);
 					addChild(man);
 			}
 		}
