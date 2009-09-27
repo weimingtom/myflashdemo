@@ -3,7 +3,6 @@
 	import flash.display.Stage;
 	import flash.events.*;
 	import flash.net.XMLSocket;
-	import flash.utils.ByteArray;
 
 	class Man extends Sprite{
 		var _url:String = "192.168.0.243";
@@ -27,29 +26,40 @@
 		var _stand : Stand = new Stand();;//站立状态
 		var _goRight : GoRight = new GoRight();;//向右走
 		var _goLeft : GoLeft = new GoLeft();//左走
-		
+		var _init:Boolean=false;
 //		var _hitHand : HitHand = new HitHand();//出拳
 //		var _hitLeg : HitLeg = new HitLeg();//出腿
 		
 		
 		
-		public function Man(socket:XMLSocket){
+		public function Man(stage:Stage,socket:XMLSocket,booleanInit:Boolean){
 			
-			init(socket);
+			init(stage,socket,booleanInit);
 
 		}
 		
-		private function init(socket:XMLSocket):void{
-
+		private function init(stage:Stage,socket:XMLSocket,init:Boolean):void{
+		
+			this._stage = stage;
+			this._init = init;
 			this._socket = socket;
 			try {    
-                this._socket.addEventListener(DataEvent.DATA, dataHandler); 
-                this._socket.addEventListener(Event.CONNECT, onConnect );
+				if(this._init){
+					this._socket.connect("192.168.0.243",8821);
+					this._socket.send("server:");
+				}
+				if(this._socket!=null){
+	                this._socket.addEventListener(DataEvent.DATA, dataHandler); 
+	                this._socket.addEventListener(Event.CONNECT, onConnect );
+				}
             }   
             catch (error:Error){     
-                this._socket.close();   
-            }   
-			stand(true);
+            	if(this._socket!=null){
+              	  this._socket.close();   
+             	}
+            } 
+              
+			//stand(true);
 			
 			
 		}
@@ -182,10 +192,10 @@
 		var action:uint = KeyListener.getDirection();
           if(action==3){
            	  Man(Bird.hashMap.get(_url)).removeAllScript();
-              Man(Bird.hashMap.get(_url)).goRight(true);
+              Man(Bird.hashMap.get(_url)).goRight(false);
            }else if(action==7){
            	  Man(Bird.hashMap.get(_url)).removeAllScript();
-           	  Man(Bird.hashMap.get(_url)).goLeft(true);
+           	  Man(Bird.hashMap.get(_url)).goLeft(false);
            }else{
            
            }
@@ -193,30 +203,59 @@
 	
 		private function dataHandler(event:DataEvent):void {
            var str:String = event.data;
-           var arr:Array = new Array();
-           arr = str.split("-");
-           var addr:String = arr[0];
-           var action:String = arr[1];
-           var tmpMan :Man =Man(Bird.hashMap.get(addr));
+           trace(str);
+           if(str.indexOf("server:")!=-1){
+           		str = str.replace("server:","");
+           		trace("替换后");
+           		trace(str);
+           		
+           		var arr1:Array = new Array();
+	           	arr1 = str.split("-");
+	           	trace(arr1.toString());
+	           	for each(var tmpStr:String in arr1){
+	           		if(tmpStr==""||tmpStr==" "){
+	           			break;
+	           		}
+	           		
+	           		//var tmpsocket = new XMLSocket(tmpStr,8821);
+						
+					var tmpMan2 : Man = new Man(_stage,null,false);
+					trace("MAN");
+					Bird.hashMap.put("192.168.0.243",tmpMan2);
+					_stage.addChild(tmpMan2);
+					
+	           	
+	           	}
+
+	            
            
-           if(action=="stand"){
-           	  tmpMan.removeAllScript();
-           	  tmpMan.stand(false);
-           }else if(action=="goRight"){
-           	  tmpMan.removeAllScript();
-              tmpMan.goRight(false);
-           }else if(action=="goLeft"){
-           	  tmpMan.removeAllScript();
-           	  tmpMan.goLeft(false);
-//           }else if(action=="hitHand"){
-//           	  removeAllScript();
-//           	  hitHand(false);
-//           }else if(action=="hitLeg"){
-//           	  removeAllScript();
-//           	  hitLeg(false);
            }else{
-           
+	           var arr:Array = new Array();
+	           arr = str.split("-");
+	           var addr:String = arr[0];
+	           var action:String = arr[1];
+	           var tmpMan :Man =Man(Bird.hashMap.get(addr));
+	           
+	           if(action=="stand"){
+	           	  tmpMan.removeAllScript();
+	           	  tmpMan.stand(false);
+	           }else if(action=="goRight"){
+	           	  tmpMan.removeAllScript();
+	              tmpMan.goRight(false);
+	           }else if(action=="goLeft"){
+	           	  tmpMan.removeAllScript();
+	           	  tmpMan.goLeft(false);
+	//           }else if(action=="hitHand"){
+	//           	  removeAllScript();
+	//           	  hitHand(false);
+	//           }else if(action=="hitLeg"){
+	//           	  removeAllScript();
+	//           	  hitLeg(false);
+	           }else{
+	           
+	           }
            }
+           
            
            
         }   
@@ -228,7 +267,9 @@
 //            //将得到的信息写入ba中   
 //            ba.writeMultiByte(str,"UTF-8");     
             //通过连接写入socket中   
-			this._socket.send(str);
+            if(this._socket!=null){
+				this._socket.send(str);
+            }
 //			this._socket.writeBytes(ba);
 //			this._socket.flush();
         }
@@ -277,128 +318,6 @@
 			this._y = v;
 		}
 			
-			
-			
-			
-			
-			
-//			
-//			
-//function funSocket(event:ProgressEvent):void
-//		{
-//			var msg:String="";
-//			var pd:String=""; //协议判断字符
-//			var intCD:int=0;
-//			var j:int=0;
-//			var arrList:Array;
-//			var arrListxy:Array;
-//			var loginname:String="";
-//			var ux:int=0;
-//			var uy:int=0;
-//			while(socket.bytesAvailable)
-//			{
-//				
-//				msg=socket.readMultiByte(socket.bytesAvailable,"utf8");
-//				pd=msg.substring(0,2);
-//				trace(msg);
-//				intCD=msg.length;//获取字符串长度			
-//				if(pd=="11")
-//				{   j=msg.indexOf('44',0);
-//					if (j>0)
-//					{
-//					 pd=msg.substring(j+2,intCD);
-//					// labCount.text=pd;
-//					 msg=msg.substring(0,j);					 	
-//					}					
-//					msg=msg.substring(4,intCD);
-//					var myPattern2:RegExp=/\r\n/;//清除回车和换行符
-//					/ ar myPattern3:RegExp=/\n/;
-//					msg=msg.replace(myPattern2,'');
-//					//msg=msg.replace(myPattern3,'');
-//					arrList=msg.split("--");
-//					//arrList.unshift("所有人");
-//					//arrList.unshift(myName);
-//				   // trace(arrList);	
-//					if (arrList.length>0) {						
-//					for(j=0;j<arrList.length;j++)
-//					{
-//					  loginname	=arrList[j].toString();
-//					  arrListxy =loginname.split(",");
-//					  loginname =arrListxy[0].toString();
-//					  ux=int(arrListxy[1].toString());
-//					  uy=int(arrListxy[2].toString());
-//					  trace("login:"+loginname);	
-//					  if (myName!=loginname)
-//					  {		
-//						//tracemc.text+=loginname+"登录 \n";
-//						addmessage(loginname+"登录");	
-//						trace(tracemc.text); 	
-//					  if (userSet.propertyIsEnumerable(loginname)==false)		
-//					  {
-//					  var Qrole:Player;	
-//				      Qrole = new Player("roles/38x88.png", 62, 103, 38, 88, 6);
-// 				      Qrole.place(ux,uy);
-//				      Qrole.playerName=loginname;	
-//				      scene.addContain(Qrole);
-//				      userSet[loginname]=Qrole;
-//				      }
-//				     }
-//				  }
-//				 }
-//					
-//				}else if(pd=="22")
-//				{
-//					msg=msg.substring(2,intCD);
-//					var arr:Array=msg.split('\n');
-//					for(var i:int=0;i<arr.length;i++)
-//					{
-//						if(arr[i].length>1)
-//						{
-//							var myPattern:RegExp=/\r/;
-//							arr[i]=arr[i].replace(myPattern,'');
-//							//tracemc.text+=arr[i];
-//							addmessage(arr[i]);
-//						//	myText.text+=arr[i]+"\n";
-//						}
-//					}
-//					//myText.verticalScrollPosition = myText.maxVerticalScrollPosition;//滚动到最下面
-//				}else if(pd=="33")
-//				{
-//				}
-//				else if(pd=="44")
-//				{
-//					msg=msg.substring(2,intCD);
-//					//labCount.text=msg;
-//				}
-//				else if(pd=="55")
-//				{
-//				 msg=msg.substring(2,intCD);
-//				 arrList=msg.split("--");
-//				 msg=arrList[0].toString();
-//				 //tracemc.text+=arrList[0].toString()+" Move "+arrList[1].toString()+","+arrList[2].toString()+" \n";
-//				 addmessage(arrList[0].toString()+" Move "+arrList[1].toString()+","+arrList[2].toString());
-//				 trace(tracemc.text);
-//				 //if (userSet.propertyIsEnumerable(msg)==true)
-//				 rolemove(Player(userSet[msg]),int(arrList[1].toString()),int(arrList[2].toString()));	
-//				}
-//                else if(pd=="66")
-//                {
-//                  msg=msg.substring(2,intCD);                  
-//                  if (userSet.propertyIsEnumerable(msg)==true)
-//                  {
-//                   var temrole:Player=Player(userSet[msg].valueOf());	
-//                   scene.removeFront(temrole); //这个报错 没有解决
-//                   userSet[msg]=null;
-//                   delete userSet[msg];
-//                  }
-//                  addmessage(msg+"退出");
-//                  //tracemc.text+=msg+"退出 \n"; 
-//                }
-//			}
-//				
-//		}	 
-
-        
         
 	}
 }
