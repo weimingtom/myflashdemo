@@ -2,7 +2,6 @@
 	import com.klstudio.data.map.HashMap;
 	
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 	import flash.net.XMLSocket;
 
 	public class Bird extends Sprite{
@@ -24,13 +23,13 @@
 			sb.x=0;
 			sb.y=0;
 			
-			socket = new XMLSocket(serverUrl,8821);
+			socket = new XMLSocket();
 						
-			var tmpMan : Man = new Man(socket);
+			var tmpMan : Man = new Man(stage,socket,true);
 			KeyListener.init(stage,tmpMan.eventHandler);
-			hashMap.put(serverUrl,tmpMan);
-			
-			stage.addEventListener(MouseEvent.CLICK,beginG);
+			hashMap.put("192.168.0.243",tmpMan);
+			addChild(tmpMan);
+			//stage.addEventListener(MouseEvent.CLICK,beginG);
 			
 			//stage.focus = man ;		
 			
@@ -38,14 +37,14 @@
 		
 		
 		
-		private function beginG(e:MouseEvent):void{
+		public static function beginG(tmpMan:Man):void{
 			
 			trace("当前有"+hashMap.size()+"个连接");
-			for each(var man:Man in hashMap.values()){ 
+			//for each(var man:Man in hashMap.values()){ 
 //					var base:int =	Math.floor(Math.random()*300);
 //					man.setX(man.getX()+base);
-					addChild(man);
-			}
+					//addChild(tmpMan);
+			//}
 		}
 	}
 
