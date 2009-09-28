@@ -25,9 +25,9 @@
 			
 			socket = new XMLSocket();
 						
-			var tmpMan : Man = new Man(stage,socket,true);
+			var tmpMan : Man = new Man("name",stage,socket,true);
 			KeyListener.init(stage,tmpMan.eventHandler);
-			hashMap.put("192.168.0.243",tmpMan);
+			hashMap.put("name",tmpMan);
 			addChild(tmpMan);
 			//stage.addEventListener(MouseEvent.CLICK,beginG);
 			
