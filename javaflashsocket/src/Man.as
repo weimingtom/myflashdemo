@@ -5,7 +5,7 @@
 	import flash.net.XMLSocket;
 
 	class Man extends Sprite{
-		var _url:String = "192.168.0.243";
+		var _name:String = "name";
 		var _stage :Stage;
 		private var _socket:XMLSocket;
 		
@@ -32,14 +32,14 @@
 		
 		
 		
-		public function Man(stage:Stage,socket:XMLSocket,booleanInit:Boolean){
+		public function Man(name:String,stage:Stage,socket:XMLSocket,booleanInit:Boolean){
 			
-			init(stage,socket,booleanInit);
+			init(name,stage,socket,booleanInit);
 
 		}
 		
-		private function init(stage:Stage,socket:XMLSocket,init:Boolean):void{
-		
+		private function init(name:String,stage:Stage,socket:XMLSocket,init:Boolean):void{
+			this._name = name;
 			this._stage = stage;
 			this._init = init;
 			this._socket = socket;
@@ -59,8 +59,11 @@
              	}
             } 
               
-			//stand(true);
-			
+			if(this._socket!=null){
+		        stand(true);
+			}else{
+				stand(false);
+			}
 			
 		}
 		
@@ -155,35 +158,6 @@
 //			
 //		}
 //		
-//		/**键盘事件处理*/
-//		public function eventListen(en:KeyboardEvent){
-//			if(en.keyCode == _right){
-//				removeAllScript();
-//				goRight(true);
-//			}
-//			
-//			if(en.keyCode == _left){
-//				removeAllScript();
-//				goLeft(true);
-//			}
-//			
-//			if(en.keyCode == _hitHandCode){
-//				removeAllScript();
-//				hitHand(true);
-//			}
-//			
-//			if(en.keyCode == _hitLegCode){
-//				removeAllScript();
-//				hitLeg(true);
-//			}
-//			
-//		}
-//		
-//		/**键盘松掉事件处理*/
-//		public function eventUpListen(en:KeyboardEvent){
-//			removeAllScript();
-//			stand(true);
-//		}
 
 
 
@@ -191,11 +165,11 @@
 		//使用的时候这里加个判断就可以根据不同方向进行不同操作了
 		var action:uint = KeyListener.getDirection();
           if(action==3){
-           	  Man(Bird.hashMap.get(_url)).removeAllScript();
-              Man(Bird.hashMap.get(_url)).goRight(false);
+           	  this.removeAllScript();
+              this..goRight(false);
            }else if(action==7){
-           	  Man(Bird.hashMap.get(_url)).removeAllScript();
-           	  Man(Bird.hashMap.get(_url)).goLeft(false);
+           	  this..removeAllScript();
+           	  this..goLeft(false);
            }else{
            
            }
@@ -216,12 +190,9 @@
 	           		if(tmpStr==""||tmpStr==" "){
 	           			break;
 	           		}
-	           		
-	           		//var tmpsocket = new XMLSocket(tmpStr,8821);
 						
-					var tmpMan2 : Man = new Man(_stage,null,false);
-					trace("MAN");
-					Bird.hashMap.put("192.168.0.243",tmpMan2);
+					var tmpMan2 : Man = new Man(tmpStr,_stage,null,false);
+					Bird.hashMap.put(tmpStr,tmpMan2);
 					_stage.addChild(tmpMan2);
 					
 	           	
