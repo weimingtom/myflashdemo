@@ -28,6 +28,8 @@
 			
 			player = new Player();
 			player.setMap(map);
+			player.x=8;
+			player.y=8;
 			
 			backGround.addChild(player);
 			backGround.addEventListener(MouseEvent.CLICK,mouseHandler);
@@ -36,9 +38,11 @@
 		
 		
 		private function mouseHandler(e:MouseEvent){
+			trace("e.localX"+e.localX);
 			player.setAimX(e.localX);
 			player.setAimY(e.localY);
-			events.dispatchit(player,PlayerEvent.MOVE);
+			player.moveInPath();
+//			events.dispatchit(player,PlayerEvent.MOVE);
 		}
 		
 	}
