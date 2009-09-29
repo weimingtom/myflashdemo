@@ -1,5 +1,6 @@
-package
+﻿package
 {
+	import event.PlayerEvent;
 	import event.PlayerEventDispatcher;
 	
 	import flash.display.Sprite;
@@ -30,14 +31,14 @@ package
 			
 			backGround.addChild(player);
 			backGround.addEventListener(MouseEvent.CLICK,mouseHandler);
-			 
 			
 		}
 		
 		
 		private function mouseHandler(e:MouseEvent){
-			
-			events.dispatch(PlayerEventDispatcher.MOVE,player);
+			player.setAimX(e.localX);
+			player.setAimY(e.localY);
+			events.dispatchit(player,PlayerEvent.MOVE);
 		}
 		
 	}
