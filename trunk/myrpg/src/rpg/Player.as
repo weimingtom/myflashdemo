@@ -16,8 +16,6 @@ package rpg
 		
 		private var _speed:Number = 4; 
 		
-		private var _x:Number=0;
-		private var _y:Number=0;
 		private var _angle:Number;
 		
 		private var _aimX:Number;
@@ -37,144 +35,177 @@ package rpg
 		private var _map:Array;
 		
 		public function Player(){
-			
+
 			init();
 
 		}
 		
 		private function init(){
-			this._stand = new Stand();
-			this._goLeft = new GoLeft();
-			this._goRight = new GoRight();
-			this._goGoUp = new GoUp();
-			this._goGoDown = new GoDown();
-			this._goGoUpLeft = new GoUpLeft();
-			this._goGoUpRight = new GoUpRight();
-			this._goGoDownLeft = new GoDownLeft();
-			this._goGoDownRight = new GoDownRight();
-			addEventListener(PlayerEvent.MOVE,moveInPath);
 			
-			stand();
+			_stand = new Stand();
+			_goLeft = new GoLeft();
+			_goRight = new GoRight();
+			_goGoUp = new GoUp();
+			_goGoDown = new GoDown();
+			_goGoUpLeft = new GoUpLeft();
+			_goGoUpRight = new GoUpRight();
+			_goGoDownLeft = new GoDownLeft();
+			_goGoDownRight = new GoDownRight();
+			
+			addChild(_stand);
+			addChild(_goLeft);
+			addChild(_goRight);
+			addChild(_goGoUp);
+			addChild(_goGoDown);
+			addChild(_goGoUpLeft);
+			addChild(_goGoUpRight);
+			addChild(_goGoDownLeft);
+			addChild(_goGoDownRight);
+			
+//			addEventListener(PlayerEvent.MOVE,moveInPath);
+			
 		}
 		
 		private function cancelAllStatus(){
-			this._stand.visible = false;
-			this._goLeft.visible = false;
-			this._goRight.visible = false;
-			this._goGoUp.visible = false;
-			this._goGoDown.visible = false;
-			this._goGoUpLeft.visible = false;
-			this._goGoUpRight.visible = false;
-			this._goGoDownLeft.visible = false;
-			this._goGoDownRight.visible = false;
+			_stand.visible = false;
+			_goLeft.visible = false;
+			_goRight.visible = false;
+			_goGoUp.visible = false;
+			_goGoDown.visible = false;
+			_goGoUpLeft.visible = false;
+			_goGoUpRight.visible = false;
+			_goGoDownLeft.visible = false;
+			_goGoDownRight.visible = false;
 		}
 		
 		private function stand(){
+			_stand.x=this.x;
+			_stand.y=this.y;
 			cancelAllStatus();
-			this._stand.visible = true;
+			_stand.visible = true;
 		}
 		private function goUp(){
 			cancelAllStatus();
-			this._goGoUp.visible = true;
-			this._y+=this._speed;
+			_goGoUp.visible = true;
+			
+			this.y+=_speed;
+			
+			_goGoUp.x=this.x;
+			_goGoUp.y=this.y;
 		}
 		private function goUpLeft(){
 			cancelAllStatus();
-			this._goGoUpLeft.visible = true;
+			_goGoUpLeft.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(this._angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(this._angle);//y上的分速度
-			this._x+=__xspeed;
-			this._y+=__yspeed;
+			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
+			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
+			
+			this.x+=__xspeed;
+			this.y+=__yspeed;
+			
+			_goGoUpLeft.x=this.x;
+			_goGoUpLeft.y=this.y;
 			
 		}
 		private function goUpRight(){
 			cancelAllStatus();
-			this._goGoUpRight.visible = true;
+			_goGoUpRight.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(this._angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(this._angle);//y上的分速度
-			this._x+=__xspeed;
-			this._y+=__yspeed;
+			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
+			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
+			this.x+=__xspeed;
+			this.y+=__yspeed;
+			_goGoUpRight.x=this.x;
+			_goGoUpRight.y=this.y;
 		}
 		private function goDown(){
 			cancelAllStatus();
-			this._goGoDown.visible = true;
-			this._y-=this._speed;
+			this.visible = true;
+			this.y-=_speed;
+			_goGoDown.x=this.x;
+			_goGoDown.y=this.y;
 		}
 		private function goDownLeft(){
 			cancelAllStatus();
-			this._goGoDownLeft.visible = true;
+			_goGoDownLeft.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(this._angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(this._angle);//y上的分速度
-			this._x+=__xspeed;
-			this._y+=__yspeed;
+			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
+			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
+			this.x+=__xspeed;
+			this.y+=__yspeed;
+			_goGoDownLeft.x=this.x;
+			_goGoDownLeft.y=this.y;
 		}
 		private function goDownRight(){
 			cancelAllStatus();
-			this._goGoDownRight.visible = true;
+			_goGoDownRight.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(this._angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(this._angle);//y上的分速度
-			this._x+=__xspeed;
-			this._y+=__yspeed;
+			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
+			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
+			this.x+=__xspeed;
+			this.y+=__yspeed;
+			_goGoDownRight.x=this.x;
+			_goGoDownRight.y=this.y;
 		}
 		private function goLeft(){
 			cancelAllStatus();
-			this._goLeft.visible = true;
-			this._x-=this._speed;
+			this.visible = true;
+			this.x-=_speed;
+			_goLeft.x=this.x;
+			_goLeft.y=this.y;
 		}
 		private function goRight(){
 			cancelAllStatus();
-			this._goRight.visible = true;	
-			this._x+=this._speed;
+			_goRight.visible = true;	
+			this.x+=_speed;
+			_goRight.x=this.x;
+			_goRight.y=this.y;
 		}
 		
 		
 		
 		
-		public function moveInPath(e:Event):void{
-			var endPoint:Point = new Point(this._aimX,this._aimY);
+		public function moveInPath():void{
+			var endPoint:Point = new Point(Math.round(_aimX/8),Math.round(_aimY/8));
 			
-			if(this._map == null){
+			if(_map == null){
 				trace("地图未设置");
 				return;
 			}
 			
 			
 			/*先取得路径*/
-			var __pf: PathFinding = new PathFinding(this._map,false);
+			var __pf: PathFinding = new PathFinding(_map,false);
 			
-			var __thisPoint = new Point(this._x,this._y);
+			var __thisPoint = new Point(Math.round(x/8),Math.round(y/8));
 			__pf.path8(__thisPoint,endPoint);
-			this._path = __pf.optimizePath();
+			_path = __pf.optimizePath();
 			
-			trace(this._path);
+			trace(_path);
 			
-			for(var i:int ; i<this._path.length; i++){
-				this._aimX = this._path[i].x;
-				this._aimY = this._path[i].y;
+			for(var i:int =1 ; i<_path.length; i++){
+				_aimX = _path[i].x*8;
+				_aimY = _path[i].y*8;
 				addEventListener(Event.ENTER_FRAME,go);
 			}
 			
 			
-				
 		}
 		
 		private function go(e:Event){
+//			trace(x+"--"+_aimX);
+//			trace(y+"--"+_aimY);
 			
-			
-			if(this._x==this._aimX&&this._y==this._aimY){
+			if(x==_aimX){
 				removeEventListener(Event.ENTER_FRAME,go);
 				//变成站立状态
 				stand();
 			}
 			
-			this._angle = Math.atan2(this._aimY-y, this._aimX-x);
+			//_angle = Math.atan2(_aimY-y, _aimX-x);
 			
 			if(true){
-				goLeft();
+				goRight();
 			}else if(false){
 				goRight();
 			}else{
@@ -217,22 +248,22 @@ package rpg
 
 		public function getX():Number
 		{
-			return _x;
+			return x;
 		}
 
 		public function setX(v:Number):void
 		{
-			_x = v;
+			x = v;
 		}
 
 		public function getY():Number
 		{
-			return _y;
+			return y;
 		}
 
 		public function setY(v:Number):void
 		{
-			_y = v;
+			y = v;
 		}
 
 		public function getAngle():Number
