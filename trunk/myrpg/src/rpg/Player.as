@@ -2,8 +2,6 @@
 
 package rpg
 {
-	import event.PlayerEvent;
-	
 	import findpath.PathFinding;
 	
 	import flash.display.Sprite;
@@ -202,14 +200,32 @@ package rpg
 				stand();
 			}
 			
-			//_angle = Math.atan2(_aimY-y, _aimX-x);
+			_angle = Math.atan2(_aimY-y, _aimX-x);
 			
-			if(true){
-				goRight();
-			}else if(false){
-				goRight();
+			if(_angle>0){
+				_angle=_angle;
 			}else{
-							
+				_angle=Math.PI*2 - _angle;
+			}
+			
+			if(_angle<=Math.PI/8 && _angle > Math.PI*15/8){
+				goRight();
+			}else if(_angle<=Math.PI*3/8 && _angle > Math.PI/8){
+				goUpRight();
+			}else if(_angle<=Math.PI*5/8 && _angle > Math.PI*3/8){
+				goUp();
+			}else if(_angle<=Math.PI*7/8 && _angle > Math.PI*5/8){
+				goUpLeft();
+			}else if(_angle<=Math.PI*9/8 && _angle > Math.PI*7/8){
+				goLeft();
+			}else if(_angle<=Math.PI*11/8 && _angle > Math.PI*9/8){
+				goDownLeft();
+			}else if(_angle<=Math.PI*13/8 && _angle > Math.PI*11/8){
+				goDown();
+			}else if(_angle<=Math.PI*15/8 && _angle > Math.PI*13/8){
+				goDownRight();
+			}else{
+						
 			}
 			
 							
