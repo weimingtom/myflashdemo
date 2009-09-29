@@ -14,11 +14,11 @@ package event
 	import rpg.Player;
 
 	public class PlayerEvent extends Event {
-		public var ower:Player;
-
-		public function PlayerEvent(type:String,para:Player,bubbles:Boolean=false,cancelable:Boolean=false):void {
+		public static const SIT:String = "sit";
+		public static const STAND:String = "stand";
+		public static const MOVE:String = "movehgvgf";
+		public function PlayerEvent(type:String,bubbles:Boolean=false,cancelable:Boolean=true):void {
 			super(type,bubbles,cancelable);
-			ower=para;
 		}
 
 	}

@@ -14,13 +14,10 @@ package event{
 	import rpg.Player;
 	
 	public class PlayerEventDispatcher extends EventDispatcher{
-		public static const SIT:String = "sit";
-		public static const STAND:String = "stand";
-		public static const MOVE:String = "move";
-		
-		public function dispatch(action:String, obj:Player):Boolean
+
+		public function dispatchit(player:Player,action:String):Boolean
 		{
-			return dispatchEvent(new PlayerEvent(action, obj));
+			return player.dispatchEvent(new PlayerEvent(action));
 		}
 	}
 }
