@@ -2,14 +2,13 @@
 
 package rpg
 {
-	import event.PlayerEventDispatcher;
+	import event.PlayerEvent;
 	
 	import findpath.PathFinding;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
-
 	public class Player extends Sprite{
 		
 		private var _width:Number;
@@ -17,8 +16,8 @@ package rpg
 		
 		private var _speed:Number = 4; 
 		
-		private var _x:Number;
-		private var _y:Number;
+		private var _x:Number=0;
+		private var _y:Number=0;
 		private var _angle:Number;
 		
 		private var _aimX:Number;
@@ -53,8 +52,7 @@ package rpg
 			this._goGoUpRight = new GoUpRight();
 			this._goGoDownLeft = new GoDownLeft();
 			this._goGoDownRight = new GoDownRight();
-			
-			addEventListener(PlayerEventDispatcher.MOVE,moveInPath);
+			addEventListener(PlayerEvent.MOVE,moveInPath);
 			
 			stand();
 		}
@@ -136,18 +134,23 @@ package rpg
 		
 		
 		
-		public function moveInPath(endPoint:Point):void{
+		public function moveInPath(e:Event):void{
+			var endPoint:Point = new Point(this._aimX,this._aimY);
 			
 			if(this._map == null){
 				trace("地图未设置");
 				return;
 			}
+			
+			
 			/*先取得路径*/
-			var __pf: PathFinding = new PathFinding(this._map,true);
+			var __pf: PathFinding = new PathFinding(this._map,false);
+			
 			var __thisPoint = new Point(this._x,this._y);
 			__pf.path8(__thisPoint,endPoint);
 			this._path = __pf.optimizePath();
 			
+			trace(this._path);
 			
 			for(var i:int ; i<this._path.length; i++){
 				this._aimX = this._path[i].x;
@@ -159,14 +162,13 @@ package rpg
 				
 		}
 		
-		private function go(x:Number,y:Number){
+		private function go(e:Event){
 			
 			
 			if(this._x==this._aimX&&this._y==this._aimY){
 				removeEventListener(Event.ENTER_FRAME,go);
 				//变成站立状态
 				stand();
-				trace("ddd");
 			}
 			
 			this._angle = Math.atan2(this._aimY-y, this._aimX-x);
