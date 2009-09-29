@@ -28,8 +28,8 @@
 			
 			player = new Player();
 			player.setMap(map);
-			player.x=8;
-			player.y=8;
+			player.x = 8;
+			player.y = 8;
 			
 			backGround.addChild(player);
 			backGround.addEventListener(MouseEvent.CLICK,mouseHandler);
