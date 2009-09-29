@@ -96,6 +96,7 @@ package com.qrpg.display
 			return _isSit;
 		}
 		
+		var count:Number=0;
 		public function moveInPath(path:Array):void
 		{
 			_path = path.concat();//复制数组
@@ -106,6 +107,13 @@ package com.qrpg.display
 		override public function move(px:Number, py:Number):void
 		{
 			super.move(px, py);
+			/*测试路径*/
+//			for(var i:int ;i<_path.length;i++){
+//				
+//				trace(_path[i].x);
+//				trace(_path[i].y);
+//			}
+			/*测试路径*/
 			if(_isSit){
 				_isSit = false;
 				events.dispatch(GameEventDispatcher.STAND, this);
