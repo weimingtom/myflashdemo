@@ -25,7 +25,7 @@ package com.qrpg.display
 			height:int=100, 
 			cx:int=-1, 
 			cy:int=-1, 
-			speed:Number=6):void
+			speed:Number=4):void
 			{
 				super(url, width, height, cx, cy);
 				_speed = speed;
@@ -33,6 +33,7 @@ package com.qrpg.display
 		
 		public function move(px:Number,py:Number):void
 		{
+//			trace("test");
 			events.dispatch(GameEventDispatcher.MOVE, this);
 			events.dispatch(GameEventDispatcher.ON_MOVE, this);
 			_aimx = px;//目标点坐标
