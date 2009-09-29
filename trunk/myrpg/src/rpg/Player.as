@@ -164,7 +164,7 @@ package rpg
 		
 		
 		public function moveInPath():void{
-			var endPoint:Point = new Point(Math.round(_aimX/8),Math.round(_aimY/8));
+			var endPoint:Point = new Point(Math.round((_aimX+8)/16),Math.round((_aimY+8)/16)+8);
 			
 			if(_map == null){
 				trace("地图未设置");
@@ -175,38 +175,41 @@ package rpg
 			/*先取得路径*/
 			var __pf: PathFinding = new PathFinding(_map,false);
 			
-			var __thisPoint = new Point(Math.round(x/8),Math.round(y/8));
+			var __thisPoint = new Point(Math.round((x-8)/16),Math.round((y-8)/16));
 			__pf.path8(__thisPoint,endPoint);
 			_path = __pf.optimizePath();
 			
 			trace(_path);
 			
+			addEventListener(Event.ENTER_FRAME,go);
 			for(var i:int =1 ; i<_path.length; i++){
-				_aimX = _path[i].x*8;
-				_aimY = _path[i].y*8;
-				addEventListener(Event.ENTER_FRAME,go);
+				_aimX = _path[i].x*16+8;
+				_aimY = _path[i].y*16+8;
+				trace("test");
 			}
 			
 			
 		}
 		
 		private function go(e:Event){
-//			trace(x+"--"+_aimX);
-//			trace(y+"--"+_aimY);
 			
-			if(x==_aimX){
+			if(Math.abs(x-_aimX)<=_speed){
 				removeEventListener(Event.ENTER_FRAME,go);
 				//变成站立状态
 				stand();
+				trace("stand");
 			}
 			
 			_angle = Math.atan2(_aimY-y, _aimX-x);
+			trace(_angle);
 			
 			if(_angle>0){
 				_angle=_angle;
 			}else{
 				_angle=Math.PI*2 - _angle;
 			}
+			_angle = Math.round(_angle);
+			trace(_angle);
 			
 			if(_angle<=Math.PI/8 && _angle > Math.PI*15/8){
 				goRight();
