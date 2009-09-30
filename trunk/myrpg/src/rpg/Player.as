@@ -164,7 +164,9 @@ package rpg
 		
 		
 		public function moveInPath():void{
-			var endPoint:Point = new Point(Math.round((_aimX+8)/16),Math.round((_aimY+8)/16)+8);
+			
+			
+			var endPoint:Point = new Point(Math.floor(_aimX/8)-1,Math.floor(_aimY/8)-1);
 			
 			if(_map == null){
 				trace("地图未设置");
@@ -175,16 +177,28 @@ package rpg
 			/*先取得路径*/
 			var __pf: PathFinding = new PathFinding(_map,false);
 			
-			var __thisPoint = new Point(Math.round((x-8)/16),Math.round((y-8)/16));
+			
+			var __thisPoint = new Point(Math.floor(x/8)-1,Math.floor(y/8)-1);
+			
+			trace(__thisPoint);
+			trace(endPoint);
+			
 			__pf.path8(__thisPoint,endPoint);
+			
+			trace(__pf);
+			
 			_path = __pf.optimizePath();
 			
 			trace(_path);
 			
-			addEventListener(Event.ENTER_FRAME,go);
-			for(var i:int =1 ; i<_path.length; i++){
-				_aimX = _path[i].x*16+8;
-				_aimY = _path[i].y*16+8;
+			
+			for(var i:int =0 ; i<_path.length-1; i++){
+				_aimX = _path[i].x*8+8;
+				_aimY = _path[i].y*8+8;
+				if(i==0){
+					addEventListener(Event.ENTER_FRAME,go);
+				}
+				
 				trace("test");
 			}
 			
@@ -201,17 +215,10 @@ package rpg
 			}
 			
 			_angle = Math.atan2(_aimY-y, _aimX-x);
+			
 			trace(_angle);
 			
-			if(_angle>0){
-				_angle=_angle;
-			}else{
-				_angle=Math.PI*2 - _angle;
-			}
-			_angle = Math.round(_angle);
-			trace(_angle);
-			
-			if(_angle<=Math.PI/8 && _angle > Math.PI*15/8){
+			if(_angle<=Math.PI/8 && _angle > -Math.PI/8){
 				goRight();
 			}else if(_angle<=Math.PI*3/8 && _angle > Math.PI/8){
 				goUpRight();
@@ -219,13 +226,13 @@ package rpg
 				goUp();
 			}else if(_angle<=Math.PI*7/8 && _angle > Math.PI*5/8){
 				goUpLeft();
-			}else if(_angle<=Math.PI*9/8 && _angle > Math.PI*7/8){
+			}else if((_angle<=Math.PI&& _angle > Math.PI*7/8 ) || ( _angle>=-Math.PI&& _angle  < -  Math.PI*7/8 )){
 				goLeft();
-			}else if(_angle<=Math.PI*11/8 && _angle > Math.PI*9/8){
+			}else if(_angle<=-Math.PI*5/8 && _angle >- Math.PI*7/8){
 				goDownLeft();
-			}else if(_angle<=Math.PI*13/8 && _angle > Math.PI*11/8){
+			}else if(_angle<=-Math.PI*3/8 && _angle > -Math.PI*5/8){
 				goDown();
-			}else if(_angle<=Math.PI*15/8 && _angle > Math.PI*13/8){
+			}else if(_angle<=-Math.PI*1/8 && _angle > -Math.PI*3/8){
 				goDownRight();
 			}else{
 						
