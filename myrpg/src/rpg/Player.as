@@ -166,7 +166,7 @@ package rpg
 		public function moveInPath():void{
 			
 			
-			var endPoint:Point = new Point(Math.floor(_aimX/8)-1,Math.floor(_aimY/8)-1);
+			var endPoint:Point = new Point(Math.floor(_aimX/8),Math.floor(_aimY/8));
 			
 			if(_map == null){
 				trace("地图未设置");
@@ -178,7 +178,7 @@ package rpg
 			var __pf: PathFinding = new PathFinding(_map,false);
 			
 			
-			var __thisPoint = new Point(Math.floor(x/8)-1,Math.floor(y/8)-1);
+			var __thisPoint = new Point(Math.floor(x/8),Math.floor(y/8));
 			
 			trace(__thisPoint);
 			trace(endPoint);
@@ -193,13 +193,11 @@ package rpg
 			
 			
 			for(var i:int =0 ; i<_path.length-1; i++){
-				_aimX = _path[i].x*8+8;
-				_aimY = _path[i].y*8+8;
-				if(i==0){
-					addEventListener(Event.ENTER_FRAME,go);
-				}
+				_aimX = _path[i].x*8;
+				_aimY = _path[i].y*8;
 				
-				trace("test");
+				addEventListener(Event.ENTER_FRAME,go);
+				
 			}
 			
 			
@@ -238,7 +236,7 @@ package rpg
 						
 			}
 			
-							
+			removeEventListener(Event.ENTER_FRAME,go);
 			
 		}
 
