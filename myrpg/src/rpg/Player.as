@@ -7,17 +7,21 @@ package rpg
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
+
 	public class Player extends Sprite{
 		
-		private var _width:Number;
-		private var _height:Number;
+		private var _width:int;
+		private var _height:int;
 		
-		private var _speed:Number = 4; 
+		private var _speed:int = 6; 
 		
 		private var _angle:Number;
 		
-		private var _aimX:Number;
-		private var _aimY:Number;
+		private var _aimX:int;
+		private var _aimY:int;
+		
+		private var _aimMouseX:int;
+		private var _aimMouseY:int;
 		
 		private var _stand:Sprite;
 		private var _goLeft:Sprite;
@@ -32,6 +36,11 @@ package rpg
 		private var _path:Array;
 		private var _map:Array;
 		
+		var endPoint:Point;
+		var __thisPoint:Point;
+		
+		var _xSpeed:Number;
+		var _ySpeed:Number;
 		public function Player(){
 
 			init();
@@ -77,96 +86,179 @@ package rpg
 		}
 		
 		private function stand(){
-			_stand.x=this.x;
-			_stand.y=this.y;
+			_stand.x=0;
+			_stand.y=0;
 			cancelAllStatus();
 			_stand.visible = true;
 		}
-		private function goUp(){
+		private function goUp(e:Event){
+			var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goUp);
+				stand();
+				return;
+			}
+			
 			cancelAllStatus();
 			_goGoUp.visible = true;
 			
-			this.y+=_speed;
 			
-			_goGoUp.x=this.x;
-			_goGoUp.y=this.y;
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
+			
+			_goGoUp.x=0;
+			_goGoUp.y=0;
 		}
-		private function goUpLeft(){
+		private function goUpLeft(e:Event){
+						var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goUpLeft);
+				stand();
+				return;
+			}
+			
 			cancelAllStatus();
 			_goGoUpLeft.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
 			
-			this.x+=__xspeed;
-			this.y+=__yspeed;
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
 			
-			_goGoUpLeft.x=this.x;
-			_goGoUpLeft.y=this.y;
+			_goGoUpLeft.x=0;
+			_goGoUpLeft.y=0;
 			
 		}
-		private function goUpRight(){
+		private function goUpRight(e:Event){
+									var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goUpRight);
+				stand();
+				return;
+			}
+			
 			cancelAllStatus();
 			_goGoUpRight.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
-			this.x+=__xspeed;
-			this.y+=__yspeed;
-			_goGoUpRight.x=this.x;
-			_goGoUpRight.y=this.y;
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
+			_goGoUpRight.x=0;
+			_goGoUpRight.y=0;
 		}
-		private function goDown(){
+		private function goDown(e:Event){
+									var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goDown);
+				stand();
+				return;
+			}
+			
 			cancelAllStatus();
-			this.visible = true;
-			this.y-=_speed;
-			_goGoDown.x=this.x;
-			_goGoDown.y=this.y;
+			_goGoDown.visible = true;
+			
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
+			_goGoDown.x=0;
+			_goGoDown.y=0;
 		}
-		private function goDownLeft(){
+		private function goDownLeft(e:Event){
+									var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goDownLeft);
+				stand();
+				return;
+			}
+			
 			cancelAllStatus();
 			_goGoDownLeft.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
-			this.x+=__xspeed;
-			this.y+=__yspeed;
-			_goGoDownLeft.x=this.x;
-			_goGoDownLeft.y=this.y;
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
+			_goGoDownLeft.x=0;
+			_goGoDownLeft.y=0;
 		}
-		private function goDownRight(){
+		private function goDownRight(e:Event){
+			
+									var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goDownRight);
+				stand();
+				return;
+			}
+			
 			cancelAllStatus();
 			_goGoDownRight.visible = true;
 			
-			var __xspeed:Number = _speed*Math.cos(_angle);//x上的分速度
-			var __yspeed:Number = _speed*Math.sin(_angle);//y上的分速度
-			this.x+=__xspeed;
-			this.y+=__yspeed;
-			_goGoDownRight.x=this.x;
-			_goGoDownRight.y=this.y;
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
+			_goGoDownRight.x=0;
+			_goGoDownRight.y=0;
 		}
-		private function goLeft(){
+		private function goLeft(e:Event){
+			
+									var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goLeft);
+				stand();
+				return;
+			}
+			
 			cancelAllStatus();
-			this.visible = true;
-			this.x-=_speed;
-			_goLeft.x=this.x;
-			_goLeft.y=this.y;
+			_goLeft.visible = true;
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
+			_goLeft.x=0;
+			_goLeft.y=0;
 		}
-		private function goRight(){
+		private function goRight(e:Event){
+			var __dx:Number = _aimMouseX-x;//目标地坐标和人物坐标的的差值
+			var __dy:Number = _aimMouseY-y;
+			if(__dx*__dx+__dy*__dy<_speed*_speed){//如果速度大于线的长度则
+				x = _aimMouseX;
+				y = _aimMouseY;
+				removeEventListener(Event.ENTER_FRAME, goRight);
+				stand();
+				return;
+			}
+			
+			
 			cancelAllStatus();
 			_goRight.visible = true;	
-			this.x+=_speed;
-			_goRight.x=this.x;
-			_goRight.y=this.y;
+			this.x+=_xSpeed;
+			this.y+=_ySpeed;
+			_goRight.x=0;
+			_goRight.y=0;
 		}
 		
 		
 		
 		
 		public function moveInPath():void{
+				_aimMouseX = _aimX;
+				_aimMouseY = _aimY;
+				
 			
-			
-			var endPoint:Point = new Point(Math.floor(_aimX/8),Math.floor(_aimY/8));
+			endPoint = new Point(Math.floor((_aimX+8)/8)-1,Math.floor((_aimY+8)/8)-1);
 			
 			if(_map == null){
 				trace("地图未设置");
@@ -178,65 +270,61 @@ package rpg
 			var __pf: PathFinding = new PathFinding(_map,false);
 			
 			
-			var __thisPoint = new Point(Math.floor(x/8),Math.floor(y/8));
+			 __thisPoint = new Point(Math.floor((x+8)/8)-1,Math.floor((y+8)/8)-1);
 			
-			trace(__thisPoint);
-			trace(endPoint);
 			
 			__pf.path8(__thisPoint,endPoint);
 			
-			trace(__pf);
 			
 			_path = __pf.optimizePath();
 			
 			trace(_path);
 			
-			
 			for(var i:int =0 ; i<_path.length-1; i++){
 				_aimX = _path[i].x*8;
 				_aimY = _path[i].y*8;
-				
-				addEventListener(Event.ENTER_FRAME,go);
-				
+				go();
 			}
 			
 			
 		}
 		
-		private function go(e:Event){
+		private function go(){
 			
-			if(Math.abs(x-_aimX)<=_speed){
-				removeEventListener(Event.ENTER_FRAME,go);
-				//变成站立状态
-				stand();
-				trace("stand");
-			}
-			
-			_angle = Math.atan2(_aimY-y, _aimX-x);
-			
+			_angle = Math.atan2(endPoint.y*8 - __thisPoint.y*8, endPoint.x*8 - __thisPoint.x*8);
 			trace(_angle);
-			
-			if(_angle<=Math.PI/8 && _angle > -Math.PI/8){
-				goRight();
-			}else if(_angle<=Math.PI*3/8 && _angle > Math.PI/8){
-				goUpRight();
-			}else if(_angle<=Math.PI*5/8 && _angle > Math.PI*3/8){
-				goUp();
-			}else if(_angle<=Math.PI*7/8 && _angle > Math.PI*5/8){
-				goUpLeft();
-			}else if((_angle<=Math.PI&& _angle > Math.PI*7/8 ) || ( _angle>=-Math.PI&& _angle  < -  Math.PI*7/8 )){
-				goLeft();
-			}else if(_angle<=-Math.PI*5/8 && _angle >- Math.PI*7/8){
-				goDownLeft();
+			_xSpeed = _speed*Math.cos(_angle);//x上的分速度
+			_ySpeed = _speed*Math.sin(_angle);//y上的分速度
+			if(_angle<=Math.PI/8 && _angle > -Math.PI*1/8){
+				addEventListener(Event.ENTER_FRAME,goRight);
+			}else if(_angle<= - Math.PI*1/8 && _angle >- Math.PI*3/8){
+				addEventListener(Event.ENTER_FRAME,goUpRight);
 			}else if(_angle<=-Math.PI*3/8 && _angle > -Math.PI*5/8){
-				goDown();
-			}else if(_angle<=-Math.PI*1/8 && _angle > -Math.PI*3/8){
-				goDownRight();
+				addEventListener(Event.ENTER_FRAME,goUp);
+			}else if(_angle<=-Math.PI*5/8 && _angle > -Math.PI*7/8){
+				addEventListener(Event.ENTER_FRAME,goUpLeft);
+			}else if((_angle<=Math.PI&& _angle > Math.PI*7/8 ) || ( _angle>=-Math.PI&& _angle  < -  Math.PI*7/8 )){
+				addEventListener(Event.ENTER_FRAME,goLeft);
+			}else if(_angle<=Math.PI*7/8 && _angle > Math.PI*7/8){
+				addEventListener(Event.ENTER_FRAME,goDownLeft);
+			}else if(_angle<=Math.PI*5/8 && _angle > Math.PI*3/8){
+				addEventListener(Event.ENTER_FRAME,goDown);
+			}else if(_angle<=Math.PI*3/8 && _angle > Math.PI*1/8){
+				addEventListener(Event.ENTER_FRAME,goDownRight);
 			}else{
 						
 			}
 			
-			removeEventListener(Event.ENTER_FRAME,go);
+
+
+//			removeEventListener(Event.ENTER_FRAME,goRight);
+//			removeEventListener(Event.ENTER_FRAME,goUpRight);
+//			removeEventListener(Event.ENTER_FRAME,goUp);
+//			removeEventListener(Event.ENTER_FRAME,goUpLeft);
+//			removeEventListener(Event.ENTER_FRAME,goLeft);
+//			removeEventListener(Event.ENTER_FRAME,goDownLeft);
+//			removeEventListener(Event.ENTER_FRAME,goDown);
+//			removeEventListener(Event.ENTER_FRAME,goDownRight);
 			
 		}
 
