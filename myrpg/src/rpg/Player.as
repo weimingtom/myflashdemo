@@ -44,6 +44,7 @@ package rpg
 		public function Player(){
 
 			init();
+			stand();
 
 		}
 		
@@ -305,7 +306,7 @@ package rpg
 				addEventListener(Event.ENTER_FRAME,goUpLeft);
 			}else if((_angle<=Math.PI&& _angle > Math.PI*7/8 ) || ( _angle>=-Math.PI&& _angle  < -  Math.PI*7/8 )){
 				addEventListener(Event.ENTER_FRAME,goLeft);
-			}else if(_angle<=Math.PI*7/8 && _angle > Math.PI*7/8){
+			}else if(_angle<=Math.PI*7/8 && _angle > Math.PI*5/8){
 				addEventListener(Event.ENTER_FRAME,goDownLeft);
 			}else if(_angle<=Math.PI*5/8 && _angle > Math.PI*3/8){
 				addEventListener(Event.ENTER_FRAME,goDown);
