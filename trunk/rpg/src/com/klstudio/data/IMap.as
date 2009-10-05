@@ -1,4 +1,4 @@
-package com.klstudio.data{  
+package com.data{  
         public interface IMap{  
                 function clear():void;  
                 function containsKey(key:Object):Boolean;  
