@@ -1,7 +1,7 @@
-﻿package com.klstudio.data.map{  
+﻿package com.data.map{  
           
         import flash.utils.Dictionary;  
-        import com.klstudio.data.IMap;  
+        import com.data.IMap;  
           
         public class HashMap implements IMap{  
                   
