@@ -10,6 +10,8 @@ package rpg
 
 	public class Player extends Sprite{
 		
+		private var _name:String;
+		
 		private var _width:int;
 		private var _height:int;
 		
@@ -427,6 +429,16 @@ package rpg
 		public function setMap(v:Array):void
 		{
 			_map = v;
+		}
+
+		public function getName():String
+		{
+			return _name;
+		}
+
+		public function setName(v:String):void
+		{
+			_name = v;
 		}
 		
 		
