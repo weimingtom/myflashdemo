@@ -5,6 +5,7 @@
 	import event.PlayerEventDispatcher;
 	
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
 	import flash.net.Socket;
@@ -13,6 +14,8 @@
 	import rpg.Player;
 	
 	public class myrpg extends Sprite{
+		
+		var urlRequest:ur
 		
 		var playerList:HashMap = new HashMap();
 		var socket:Socket;
@@ -42,8 +45,10 @@
 		private function init(){
 		
 			socket = new Socket();
-			socket.connect("192.168.0.4",8821);
-			
+			socket.connect("192.168.0.243",8821);
+			trace("conne");
+			socket.addEventListener(Event.CONNECT,connectHandler);
+			socket.addEventListener(Event.CLOSE,closeHandler);
 			socket.addEventListener(ProgressEvent.SOCKET_DATA,dataHandler);
 			
 			events = new PlayerEventDispatcher();
@@ -62,18 +67,28 @@
 			
 			
 			
-			var str:String="01";
-//			str = str+"--";
-//			str=str+(userName);
-//			str=str+",";
-//			str=str+(0);
-//			str=str+",";
-//			str=str+(0);
-			sendMsg(str);
+
 			
 			backGround.addEventListener(MouseEvent.CLICK,mouseHandler);
 		
 		
+		}
+		
+		private function closeHandler(e:Event){
+			var str:String="00";
+			str = str+"--";
+			sendMsg(str);
+		}
+		
+		private function connectHandler(e:Event){
+			var str:String="01";
+			str = str+"--";
+			str=str+(userName);
+			str=str+",";
+			str=str+("0");
+			str=str+",";
+			str=str+("0");
+			sendMsg(str);
 		}
 		
 		private function mouseHandler(e:MouseEvent){
@@ -114,10 +129,10 @@
 			
 			while(socket.bytesAvailable){//01--aaa,98,99--gggg,88,99
 				msg=socket.readMultiByte(socket.bytesAvailable,"utf8");
-				pd=msg.substring(0,2);
 				trace(msg);
+				pd=msg.substring(0,4);
 				msgLength=msg.length;//获取字符串长度			
-				if(pd=="01"){//登陆一个新玩家
+				if(pd=="01--"){//登陆一个新玩家
 					trace("01");
 					msg=msg.substring(4,msgLength);
 					trace(msg);
@@ -150,7 +165,7 @@
 				  }
 				 }
 					
-				}else if(pd=="02"){//玩家移动
+				}else if(pd=="02--"){//玩家移动
 						trace("02");
 						msg=msg.substring(4,msgLength);
 //						var myPattern2:RegExp=/\r\n/;//清除回车和换行符
@@ -178,12 +193,12 @@
 					      }
 					  }
 					 }
-				}else if(pd=="03"){//玩家发信息
+				}else if(pd=="03--"){//玩家发信息
 				
-				}else if(pd=="04"){
+				}else if(pd=="04--"){
 					//labCount.text=msg;
 				}
-				else if(pd=="05"){
+				else if(pd=="05--"){
 					
 //					 msg=msg.substring(2,intCD);
 //					 arrList=msg.split("--");
@@ -194,7 +209,7 @@
 //					 //if (userSet.propertyIsEnumerable(msg)==true)
 //					 rolemove(Player(userSet[msg]),int(arrList[1].toString()),int(arrList[2].toString()));	
 				}
-                else if(pd=="06"){
+                else if(pd=="06--"){
                 }
 			}
 			
