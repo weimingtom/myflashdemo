@@ -1,0 +1,6 @@
+00:取服务器数据玩家信息
+<playsers>
+<player userName="" mapId="" x="" y=""/>
+<player userName="" mapId="" x="" y=""/>
+<player userName="" mapId="" x="" y=""/>
+</playsers>
