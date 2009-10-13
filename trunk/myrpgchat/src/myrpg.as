@@ -202,6 +202,7 @@
 					  uy=int(arrListxy[2].toString());
 						//tracemc.text+=loginname+"登录 \n";
 						//addmessage(loginname+"登录");	
+						trace(playerList.containsKey(loginname));
 						  if (playerList.containsKey(loginname)==false){
 				  	  			var __player = new Player();
 				  	  			__player.setName(loginname);
