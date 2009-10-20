@@ -10,6 +10,7 @@
 	
 	
 	public class Main extends Sprite {
+		var ready:Boolean = true;
 		var ballsMap:HashMap = new HashMap();
 		
 		var map:Array = [
@@ -70,37 +71,47 @@
 			
 			if(startPoint!=null && endPoint!=null){
 				var path:Array = new PathFinding(map).path4(startPoint,endPoint);
-				
 				aimBall = Ball(ballsMap.get(startPoint.x+"-"+startPoint.y)) ;
-				moveInPath(path);
 				
-				modifyMap(startPoint.x,startPoint.y,0);
-				modifyMap(endPoint.x,endPoint.y,1);
-				freeMap.remove(endPoint.x+"-"+endPoint.y);
-				freeMap.put(startPoint.x+"-"+startPoint.y,new Point(startPoint.x,startPoint.y))
-				ballsMap.remove(startPoint.x+"-"+startPoint.y);
-				ballsMap.put(endPoint.x+"-"+endPoint.y,aimBall);
+				if(ready){
+					moveInPath(path);
+				}
 				
-				aimBall = null;
-				startPoint = null;
-				endPoint = null;
 				
-				putBall();
 			}
 			
 		}
 	
 		private function moveInPath(path:Array){
 			
-				trace(path);
+			trace(path);
+				
+			var count:uint = 0;	
 			for each (var point:Point in path){
-				if(aimBall!=null){
-					trace("aimBall.x"+aimBall.x);
-					trace("aimBall.y"+aimBall.y);
-					trace(point);
+				if(aimBall!=null&&count!=0){
 					aimBall.move(point);
 				}
+				count++;
 			}
+			
+			
+			
+			if(ready){
+					modifyMap(startPoint.x,startPoint.y,0);
+					modifyMap(endPoint.x,endPoint.y,1);
+					freeMap.remove(endPoint.x+"-"+endPoint.y);
+					freeMap.put(startPoint.x+"-"+startPoint.y,new Point(startPoint.x,startPoint.y))
+					ballsMap.remove(startPoint.x+"-"+startPoint.y);
+					ballsMap.put(endPoint.x+"-"+endPoint.y,aimBall);
+					
+				
+					aimBall = null;
+					startPoint = null;
+					endPoint = null;
+				
+					putBall();
+			}
+//			trace(map);
 			
 		}
 	
