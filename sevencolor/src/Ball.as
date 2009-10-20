@@ -14,6 +14,9 @@
 		private var _xspeed:int = 0 ;
 		private var _yspeed:int = 0 ;
 		
+		public var centX:uint; //中心点x
+		public var centY:uint; //中心点y
+		
 		var _ready:Boolean = true;
 		
 		public function Ball(color:uint){
@@ -26,37 +29,37 @@
 			switch(color){
 				case 0 :  
 					this.graphics.beginFill(Constant.COLOR_0);
-			        this.graphics.drawCircle(50,50,17);
+			        this.graphics.drawCircle(3,3,17);
 			        this.graphics.endFill();
 			        break; 
 				case 1 :  
 					this.graphics.beginFill(Constant.COLOR_1);
-			        this.graphics.drawCircle(50,50,17);
+			        this.graphics.drawCircle(3,3,17);
 			        this.graphics.endFill();
 			        break;
 				case 2 :  
 					this.graphics.beginFill(Constant.COLOR_2);
-			        this.graphics.drawCircle(50,50,17);
+			        this.graphics.drawCircle(3,3,17);
 			        this.graphics.endFill();
 			        break;
 				case 3 :  
 					this.graphics.beginFill(Constant.COLOR_3);
-			        this.graphics.drawCircle(50,50,17);
+			        this.graphics.drawCircle(3,3,17);
 			        this.graphics.endFill();
 			        break;
 				case 4 :  
 					this.graphics.beginFill(Constant.COLOR_4);
-			        this.graphics.drawCircle(50,50,17);
+			        this.graphics.drawCircle(3,3,17);
 			        this.graphics.endFill();
 			        break;
 				case 5 :  
 					this.graphics.beginFill(Constant.COLOR_5);
-			        this.graphics.drawCircle(50,50,17);
+			        this.graphics.drawCircle(3,3,17);
 			        this.graphics.endFill();
 			        break;
 				case 6 :  
 					this.graphics.beginFill(Constant.COLOR_6);
-			        this.graphics.drawCircle(50,50,17);
+			        this.graphics.drawCircle(3,3,17);
 			        this.graphics.endFill();
 			        break;
 			        
@@ -80,32 +83,21 @@
 			var xtimes:uint = 0;
 			var ytimes:uint = 0;
 			
-			if(point.x>x){
+			if(point.x>getCentX()){
 				_xspeed = _speed ;
-			}else if(point.x==x){
+			}else if(point.x==getCentX()){
 				_xspeed = 0 ;
 			}else{
 				_xspeed = - _speed;
 			}
-//			xtimes = Math.abs( point.x - this.x ) / tmpSpeed ;
-//			
-			if(point.y>y){
+			
+			if(point.y>getCentY()){
 				_yspeed = _speed ;
-			}else if(point.y==y){
+			}else if(point.y==getCentY()){
 				_yspeed = 0 ;
 			}else{
 				_yspeed = - _speed;
 			}
-//			ytimes = Math.abs( point.y - this.y ) / tmpSpeed ;
-			
-//			trace("this.x"+this.x);
-//			trace("this.y"+this.y);
-//			
-//			trace(xspeed);
-//			trace(yspeed);
-//			trace(xtimes);
-//			trace(ytimes);
-//			
 			
 			
 			if(_ready&&_xspeed!=0){
@@ -119,10 +111,10 @@
 		
 		
 		private function xgo(e:Event){
-			trace("this.x"+x);
+			trace("this.centX"+getCentX());
 			trace("_aimPoint.x"+_aimPoint.x);
         	x = x + _xspeed;
-        	if(Math.abs(x-_aimPoint.x)<=1){
+        	if(Math.abs(getCentX()-_aimPoint.x)<=1){
     			removeEventListener(Event.ENTER_FRAME,xgo);
     			trace("remove");
     			_xspeed = 0;
@@ -138,11 +130,11 @@
         }
        
         private function ygo(e:Event){
-			trace("this.y"+y);
+			trace("this.centY"+getCentY());
 			trace("_aimPoint.y"+_aimPoint.y);
 			y = y + _yspeed;
 			
-    		if(Math.abs(y-_aimPoint.y)<=1){
+    		if(Math.abs(getCentY()-_aimPoint.y)<=1){
     			removeEventListener(Event.ENTER_FRAME,ygo);
     			trace("remove");
     			_yspeed = 0;
@@ -152,6 +144,13 @@
 		
 		public function getColor(){
 			return _color;
+		}
+		
+		public function getCentX(){
+			return x+17;
+		}
+		public function getCentY(){
+			return y+17;
 		}
 
 	}
