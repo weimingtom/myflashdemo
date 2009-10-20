@@ -46,7 +46,7 @@
 			
 			freeMap = new HashMap();
 			for(var i:uint=0;i<mapLength;i++){
-				for(var j:uint=0;j<mapLength;j++){
+				for(var j:uint=0;j<mapHeight;j++){
 					freeMap.put((i.toString()+"-"+j.toString()),new Point(i,j));
 				}
 			}
@@ -58,8 +58,12 @@
 		}
 		
 		private function mouseHandler(e:MouseEvent){
-			var pointx:uint = e.stageX/40 -1;
-			var pointy:uint = e.stageY/40 -1;
+//			trace("e.localX"+e.localX);
+//			trace("e.localY"+e.localY);
+			var pointx:uint = e.stageX/40 ;
+			var pointy:uint = e.stageY/40 ;
+			trace("e.pointx"+pointx);
+			trace("e.pointy"+pointy);
 			
 			if(Ball(ballsMap.get(pointx+"-"+pointy))!=null){
 				startPoint = new Point(pointx,pointy);
@@ -73,11 +77,7 @@
 				var path:Array = new PathFinding(map).path4(startPoint,endPoint);
 				aimBall = Ball(ballsMap.get(startPoint.x+"-"+startPoint.y)) ;
 				
-				if(ready){
-					moveInPath(path);
-				}
-				
-				
+				moveInPath(path);
 			}
 			
 		}
@@ -95,23 +95,23 @@
 			}
 			
 			
+			modifyMap(startPoint.x,startPoint.y,0);
+			modifyMap(endPoint.x,endPoint.y,1);
+			freeMap.remove(endPoint.x+"-"+endPoint.y);
+			freeMap.put(startPoint.x+"-"+startPoint.y,new Point(startPoint.x,startPoint.y))
+			ballsMap.remove(startPoint.x+"-"+startPoint.y);
+			ballsMap.put(endPoint.x+"-"+endPoint.y,aimBall);
 			
-			if(ready){
-					modifyMap(startPoint.x,startPoint.y,0);
-					modifyMap(endPoint.x,endPoint.y,1);
-					freeMap.remove(endPoint.x+"-"+endPoint.y);
-					freeMap.put(startPoint.x+"-"+startPoint.y,new Point(startPoint.x,startPoint.y))
-					ballsMap.remove(startPoint.x+"-"+startPoint.y);
-					ballsMap.put(endPoint.x+"-"+endPoint.y,aimBall);
-					
+			if(startPoint!=null&&endPoint!=null){
 				
-					aimBall = null;
-					startPoint = null;
-					endPoint = null;
+				putBall();
 				
-					putBall();
 			}
-//			trace(map);
+			
+			aimBall = null;
+			startPoint = null;
+			endPoint = null;
+			
 			
 		}
 	
@@ -130,7 +130,7 @@
 				
 				var rand:uint = Math.random()* (freeKeys.length);
 				var point:Point = Point(freeMap.get(freeKeys[rand])) ;
-				freeMap.remove(freeKeys[rand]);
+//				freeMap.remove(freeKeys[rand]);
 				array.push(point);
 
 			}
@@ -161,9 +161,9 @@
 			}
 			
 			if(zo == 1 ){
-				map[x][y] = 1 ;
+				map[x][y] = zo ;
 			}else if(zo == 0){
-				map[x][y] = 0 ;
+				map[x][y] = zo ;
 			}
 		}
 		
@@ -176,9 +176,15 @@
 	      	for(var i:uint=0;i<posArray.length;i++){
 	      		var ball:Ball=new Ball(colorArray[i]);
 	      		var point:Point = posArray[i];
-	      		ball.x=20+point.x*40;
-	      		ball.y=20+point.y*40;
+	      		
+	      		ball.centX = point.x*40+20;
+	      		ball.centY = point.y*40+20;
+	      		
+	      		ball.x = ball.centX-17;
+	      		ball.y = ball.centY-17;
 	      		addChild(ball);
+	      		//空闲位置刷新
+	      		freeMap.remove(point.x+"-"+point.y);
 	      		//记录位置-球
 	      		ballsMap.put(point.x+"-"+point.y,ball);
 	      		//更新寻路用map
