@@ -105,7 +105,7 @@
 			
 			if(startPoint!=null && endPoint!=null){
 				
-				var path:Array = new PathFinding(map).path4(startPoint,endPoint);
+				var path:Array = new PathFinding(map,true).path4(startPoint,endPoint);
 				aimBall = Ball(ballsMap.get(startPoint.x+"-"+startPoint.y)) ;
 				trace(path);
 				aimBall.setPath(path);

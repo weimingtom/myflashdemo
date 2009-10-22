@@ -117,14 +117,14 @@
 			}else{
 				_yspeed = - _speed;
 			}
-//			trace(point.x);
-//			trace(x);
-//			trace(getPointX());
-//			trace(point.y);
-//			trace(y);
-//			trace(getPointY());
-//			trace(_xspeed);
-//			trace(_yspeed);
+			trace(point.x);
+			trace(x);
+			trace(getPointX());
+			trace(point.y);
+			trace(y);
+			trace(getPointY());
+			trace(_xspeed);
+			trace(_yspeed);
 			
 			if(_ready){
 				_ready = false;
@@ -144,28 +144,18 @@
         	
 
         	
-        	if((Math.abs(y-(_aimPoint.y*40+20-17))<=_speed)&&(_xspeed==0)){
+        	if(((Math.abs(y-(_aimPoint.y*40+20-17))<=_speed)&&(_xspeed==0))||(Math.abs(x-(_aimPoint.x*40+20-17))<=_speed)&&(_yspeed==0)){
     			removeEventListener(Event.ENTER_FRAME,go);
         		trace("in");
+        		x = _aimPoint.x*40+20-17;
         		y = _aimPoint.y*40+20-17;
+        		_xspeed = 0;
     			_yspeed = 0;
     			_ready = true;
 
 				stops();
     		}
     		
-    		if((Math.abs(x-(_aimPoint.x*40+20-17))<=_speed)&&(_yspeed==0)){
-    			removeEventListener(Event.ENTER_FRAME,go);
-        		trace("in");
-        		x = _aimPoint.x*40+20-17;
-    			_xspeed = 0;
-    			_ready = true;
-
-				stops();
-    		}
-	            			         //test
-	         
-            
         }
 
 //        private function ygo(e:Event){
