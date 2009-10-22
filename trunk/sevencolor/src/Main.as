@@ -10,6 +10,8 @@
 	
 	
 	public class Main extends Sprite {
+		var score:uint = 0;//得分
+		
 		var ready:Boolean = true;
 		var ballsMap:HashMap = new HashMap();
 		
@@ -43,6 +45,7 @@
 		var aimBall:Ball = null;//操作的球
 		
 		public function Main(){
+			addChild(new Table());
 			
 			freeMap = new HashMap();
 			for(var i:uint=0;i<mapLength;i++){
@@ -54,16 +57,43 @@
 			
 			stage.addEventListener(MouseEvent.CLICK,mouseHandler);
 			
-	      	
+//	      	pathCheck();
+		}
+		
+		private function pathCheck(){
+			var _map:Array = [
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+			
+		];
+			
+			var path:Array = new PathFinding(_map).path4(new Point(15,0),new Point(12,0));
+			trace("checkpath------------"+path);
 		}
 		
 		private function mouseHandler(e:MouseEvent){
 //			trace("e.localX"+e.localX);
 //			trace("e.localY"+e.localY);
+//			trace("e.stageX"+e.stageX);
+//			trace("e.stageY"+e.stageY);
 			var pointx:uint = e.stageX/40 ;
 			var pointy:uint = e.stageY/40 ;
-			trace("e.pointx"+pointx);
-			trace("e.pointy"+pointy);
+//			trace("e.pointx"+pointx);
+//			trace("e.pointy"+pointy);
 			
 			if(Ball(ballsMap.get(pointx+"-"+pointy))!=null){
 				startPoint = new Point(pointx,pointy);
@@ -74,25 +104,31 @@
 			}
 			
 			if(startPoint!=null && endPoint!=null){
+				
 				var path:Array = new PathFinding(map).path4(startPoint,endPoint);
 				aimBall = Ball(ballsMap.get(startPoint.x+"-"+startPoint.y)) ;
+				trace(path);
+				aimBall.setPath(path);
+				aimBall.move();
+				moveInPath();
 				
-				moveInPath(path);
 			}
 			
 		}
 	
-		private function moveInPath(path:Array){
+		private function moveInPath(){
 			
-			trace(path);
-				
-			var count:uint = 0;	
-			for each (var point:Point in path){
-				if(aimBall!=null&&count!=0){
-					aimBall.move(point);
-				}
-				count++;
-			}
+//			trace(path);
+//				
+//				
+//			for (var i:uint=1;i<path.length;i++){
+//				if(aimBall!=null){
+//					aimBall.move(path[i]);
+//
+//				}
+//			}
+//			
+			
 			
 			
 			modifyMap(startPoint.x,startPoint.y,0);
@@ -107,6 +143,10 @@
 				putBall();
 				
 			}
+			
+			
+			//检测是否够5连
+			check(endPoint);
 			
 			aimBall = null;
 			startPoint = null;
@@ -130,7 +170,6 @@
 				
 				var rand:uint = Math.random()* (freeKeys.length);
 				var point:Point = Point(freeMap.get(freeKeys[rand])) ;
-//				freeMap.remove(freeKeys[rand]);
 				array.push(point);
 
 			}
@@ -151,20 +190,21 @@
 		
 		/**刷新map*/
 		private function modifyMap(x:uint,y:uint,zo:uint){
-			if(x>=mapLength){
+			if(x>=mapHeight){
 				trace("x越界！");
 				return;
 			}
-			if(y>=mapHeight){
+			if(y>=mapLength){
 				trace("y越界！");
 				return;
 			}
 			
 			if(zo == 1 ){
-				map[x][y] = zo ;
+				map[y][x] = zo ;
 			}else if(zo == 0){
-				map[x][y] = zo ;
+				map[y][x] = zo ;
 			}
+			
 		}
 		
 		private function putBall(){
@@ -182,14 +222,96 @@
 	      		
 	      		ball.x = ball.centX-17;
 	      		ball.y = ball.centY-17;
-	      		addChild(ball);
 	      		//空闲位置刷新
 	      		freeMap.remove(point.x+"-"+point.y);
 	      		//记录位置-球
 	      		ballsMap.put(point.x+"-"+point.y,ball);
 	      		//更新寻路用map
 	      		modifyMap(point.x,point.y,1);
+	      		
+	      		ball.setFlag(map[point.y][point.x]);
+	      		ball.draw();
+	      		addChild(ball);
 	      	}
+			
+		}
+		
+		
+		public function check(point:Point){
+			
+			
+			var thisBall:Ball = Ball(ballsMap.get(point.x+"-"+point.y)); 
+			var thisColor:uint = thisBall.getColor();
+			
+			var lrLineMap:HashMap = new HashMap();//左右线map
+			var udLineMap:HashMap = new HashMap();//上下线map
+			var luDiagonalMap:HashMap = new HashMap();//左上右下线map
+			var ruDiagonalMap:HashMap = new HashMap();//左下右上线map
+			
+
+			
+			var tmpBall : Ball = null;
+			
+			lrLineMap.put(point.x+"-"+point.y,thisBall);
+			udLineMap.put(point.x+"-"+point.y,thisBall);
+			luDiagonalMap.put(point.x+"-"+point.y,thisBall);
+			ruDiagonalMap.put(point.x+"-"+point.y,thisBall);
+			
+			//判断左右边
+			for(var i:uint=1;point.x-i>=0;i++){
+			
+				tmpBall = Ball(ballsMap.get((point.x-i)+"-"+point.y)) ;
+				if(tmpBall!=null && thisColor == tmpBall.getColor()){
+					lrLineMap.put(((point.x-i)+"-"+point.y),tmpBall);
+					tmpBall = null ;
+				}else{
+					//一旦碰到一个是空就break;说明不相连
+					break;
+				}
+					
+			}
+			
+			for(var j:uint=1;point.x+j<=15;j++){
+			
+				tmpBall = Ball(ballsMap.get((point.x+j)+"-"+point.y)) ;
+				if(tmpBall!=null&& thisColor == tmpBall.getColor()){
+					lrLineMap.put(((point.x+j)+"-"+point.y),tmpBall);
+					tmpBall = null ;
+				}else{
+					//一旦碰到一个是空就break;说明不相连
+					break;
+				}
+					
+			}
+			//判断上下边
+		
+			//判断左上右下
+			//判断左下右上
+			
+
+
+				
+			var lrLineNum:uint = lrLineMap.size(); //左右线num
+			var udLineNum:uint = 0; //上下线num
+			var ludiagonalNum:uint = 0; //左上右下线num
+			var rudiagonalNum:uint = 0; //左下右上线num
+			//是否先判断size得考虑下
+			if(lrLineNum>=5){
+				for each(var tmpCancelBall:Ball in lrLineMap.values()){
+					if(tmpCancelBall!=null){
+						removeChild(tmpCancelBall);
+						
+						modifyMap(uint(tmpCancelBall.x/40),uint(tmpCancelBall.y/40),0);
+						freeMap.put(uint(tmpCancelBall.x/40)+"-"+uint(tmpCancelBall.y/40),new Point(uint(tmpCancelBall.x/40),uint(tmpCancelBall.y/40)))
+						ballsMap.remove(uint(tmpCancelBall.x/40)+"-"+uint(tmpCancelBall.y/40));
+					}
+				}
+				score = score +10*lrLineNum;
+			}
+			lrLineMap = null;
+			lrLineNum = 0;
+			trace("score"+score);
+			
 			
 		}
 		
