@@ -15,7 +15,7 @@
 		
 		private var _color:uint;
 		private var _aimPoint:Point;
-		private var _speed:int = 4 ;
+		private var _speed:int = 10 ;
 //		private var _speed:int = 20 ;
 		private var _xspeed:int = 0 ;
 		private var _yspeed:int = 0 ;
