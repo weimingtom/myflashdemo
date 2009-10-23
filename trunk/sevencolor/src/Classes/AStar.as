@@ -69,6 +69,7 @@
 					continue
 				arr.push([xp,yp]);				
 			}			
+			
 			return arr;
 		}		
 		//是否超出地图范围
@@ -195,6 +196,7 @@
 					return false;			
 				}
 				GetF(GetRound(ndCurrent.pos));
+				
 				//按照F值由大到小的顺序排列开启列表
 				aOpenList.sortOn("F",Array.NUMERIC | Array.DESCENDING);
 				//将开启列表最后一位元素列入关闭列表
