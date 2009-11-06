@@ -7,7 +7,7 @@
 	
 	public class Ball extends MovieClip
 	{
-		private var _pathDepth:uint=1;
+		private var _pathDepth:uint=0;
 		private var _path :Array = null;
 		
 		private var _textfield:TextField = new TextField();
@@ -117,12 +117,12 @@
 			}else{
 				_yspeed = - _speed;
 			}
-			trace(point.x);
-			trace(x);
-			trace(getPointX());
-			trace(point.y);
-			trace(y);
-			trace(getPointY());
+//			trace(point.x);
+//			trace(x);
+//			trace(getPointX());
+//			trace(point.y);
+//			trace(y);
+//			trace(getPointY());
 			trace(_xspeed);
 			trace(_yspeed);
 			
