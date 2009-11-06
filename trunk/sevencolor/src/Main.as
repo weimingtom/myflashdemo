@@ -1,13 +1,9 @@
 ﻿package
 {
-	import Classes.ANode;
-	import Classes.AStar;
-	
-	import MyPathFind.Node;
+	import MyPathFind.PathFind;
+	import MyPathFind.PathFindv1;
 	
 	import com.data.map.HashMap;
-	
-	import findpath.PathFinding;
 	
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -41,8 +37,8 @@
 		
 		var freeMap:HashMap;
 		
-		var mapLength = map[0].length;
-		var mapHeight = map.length;
+		var mapLength:uint = map[0].length;
+		var mapHeight:uint = map.length;
 		
 		var startPoint:Point = null;//初始点
 		var endPoint:Point = null;//终点
@@ -63,16 +59,16 @@
 			
 			stage.addEventListener(MouseEvent.CLICK,mouseHandler);
 			
-	      	//pathCheck();
+	      //	pathCheck();
 		}
 		
 		private function pathCheck(){
 			var _map:Array = [
 				[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
 				[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -85,13 +81,15 @@
 				[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 			];
-			
-			var path:Array = new PathFinding(_map).path4(new Point(12,5),new Point(5,1));
-			trace("checkpath------------"+path);
+			var pf:PathFindv1 = new PathFindv1(_map);
+				pf.pathFind(new Point(1,3),new Point(3,3));
+			//如果找到路径
+			trace("已找到路径");
+			trace(pf.path);
 		}
 		
 		private function mouseHandler(e:MouseEvent){
-			var path:Array = null;
+			var path:Array = new Array();
 //			trace("e.localX"+e.localX);
 //			trace("e.localY"+e.localY);
 //			trace("e.stageX"+e.stageX);
@@ -111,24 +109,14 @@
 			
 			if(startPoint!=null && endPoint!=null){
 				
-				var astar:AStar = new AStar(map);
-				astar.ndCurrent = new ANode([startPoint.x,startPoint.y],startPoint.y*40+startPoint.x);
-				//设置起始节点
-				astar.ndStart = new ANode([startPoint.x,startPoint.y],startPoint.y*40+startPoint.x);
-				//当前节点与起始节点在同一位置
-				astar.ndCurrent = new ANode([endPoint.x,endPoint.y],endPoint.y*40+endPoint.x);
-		
-				if(astar.DoSearch()){						
-					trace(   "已找到路径！");
-					path = astar.aPath;
-				}
-				//如果没有找到
-				else{						
-					trace( "超出检测范围或无法到达");
-				}	
-				trace("map:"+map);
+				
+				var pf:PathFind = new PathFind(map,true);
+				pf.pathFind(new Point(startPoint.x,startPoint.y),new Point(endPoint.x,endPoint.y));
+				//如果找到路径
+				path = pf.path;
+				
 				aimBall = Ball(ballsMap.get(startPoint.x+"-"+startPoint.y)) ;
-				trace("path:"+path);
+				
 				aimBall.setPath(path);
 				aimBall.move();
 				moveInPath();
@@ -138,6 +126,8 @@
 		}
 	
 		private function moveInPath(){
+			
+			
 			
 //			trace(path);
 //				

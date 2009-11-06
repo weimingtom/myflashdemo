@@ -4,67 +4,9 @@
 	
 	import flash.geom.Point;
 	
-	public class PathFind{
+	public class PathFindv1{
+		private var debugger:MonsterDebugger = new MonsterDebugger(this);
 		
-		//(x=14, y=7),
-		//(x=13, y=7),
-		//(x=13, y=6),
-		//(x=13, y=5),
-		//(x=13, y=4),
-		//(x=13, y=3),
-		//(x=12, y=3),
-		//(x=12, y=2),
-		//(x=12, y=1),
-		//(x=12, y=0)
-		
-		
-		//(x=2, y=7),
-		//(x=2, y=6),
-		//(x=3, y=6),
-		//(x=4, y=6),
-		//(x=4, y=5),
-		//(x=4, y=4),
-		//(x=4, y=3),
-		//(x=4, y=2)
-		
-		
-		//(x=1, y=12),
-		//(x=1, y=11),
-							//(x=2, y=11),
-		//(x=3, y=11),
-					//(x=3, y=10),
-		//(x=3, y=9),
-							//(x=4, y=9),
-							//(x=5, y=9),
-							//(x=6, y=9),
-							//(x=7, y=9),
-		//(x=8, y=9)
-		
-		
-		//-------------------路径例子-------------------
-		//(x=2, y=7),
-		//(x=2, y=6),
-		//(x=3, y=6),
-		//(x=4, y=6),
-		//(x=4, y=5),
-		//(x=4, y=4),
-		//(x=4, y=3),
-		//(x=4, y=2)
-		
-		
-		//(x=1, y=12),
-		//(x=1, y=11),
-		//(x=2, y=11),
-		//(x=3, y=11),
-		//(x=3, y=10),
-		//(x=3, y=9),
-		//(x=4, y=9),
-		//(x=5, y=9),
-		//(x=6, y=9),
-		//(x=7, y=9),
-		//(x=8, y=9)
-		
-		private var optimize:Boolean=false;
 		private var beeValue = 10 ; //直线值
 		
 		public var map:Array;//地图
@@ -88,14 +30,29 @@
 
 		public var path:Array = new Array();
 		
-		public function PathFind(map:Array,optimize:Boolean){
+		public function PathFindv1(map:Array){
 			this.map  = map;
-			this.optimize = optimize;
 			mapWidth  = this.map[0].length;
 			mapHeight = this.map.length;
 			
 		}
 		
+//		private function initNodes(){
+//			for(var i:uint=0;i<mapWidth;i++){
+//				for(var j:uint=0;j<mapHeight;j++){
+//					var node:Node = new Node();
+//					node.x = i;
+//					node.y = j;
+//					if(map[node.x][node.y]==0){
+//						node.status = 0;
+//					}else{
+//						node.status = 1;
+//					}
+//					mapNodes.put(i+"-"+j,node)
+//				}
+//			}
+//		}
+
 		private function getAround():void{
 			
 			for(var i:uint=0;i<dirs4.length;i++){
@@ -113,11 +70,26 @@
 					node.g = cNode.g+beeValue;
 					node.f = node.g + node.h;
 					var tmpNode :Node = Node(openList.get(node.id));
+//						trace("ddd");
+//						trace("node:"+node.id);
+//						trace("ddd");
+//						trace("ttt");
+//						trace("tmpNode:"+tmpNode);
+//						trace("ttt");
+//						trace("eee");
+//						trace("cNode:"+cNode);
+//						trace("eee");
 					if(tmpNode==null){//如果该相邻节点不在开放列表中,则将该节点添加到开放列表中, 并将该相邻节点的父节点设为当前节点,同时保存该相邻节点的G和F值;
 						node.parentId = cNode.id;
 						openList.put(node.id,node);
 					}else if(tmpNode!=null){//如果该相邻节点在开放列表中, 则判断若经由当前节点到达该相邻节点的G值是否小于原来保存的G值,若小于,则将该相邻节点的父节点设为当前节点,并重新设置该相邻节点的G和F值.
 						if(node.g<tmpNode.g){
+//							trace("ddd");
+//							trace("tmpNode:"+tmpNode.id);
+//							trace("tmpNode:"+tmpNode.g);
+//							trace("node:"+node.id);
+//							trace("node:"+node.g);
+//							trace("ddd");
 							tmpNode.g = node.g;
 							tmpNode.parentId = cNode.id;
 						}
@@ -127,6 +99,7 @@
 				
 				
 			}
+//					MonsterDebugger.trace(this,Node(openList.get(50)),0xFF0000);	
 			
 		}
 		
@@ -151,14 +124,14 @@
 			cNode = sNode;
 			cNode.id = cNode.y*mapWidth+cNode.x;
 			openList.put(cNode.id,cNode);
-			getMinF();
+			fghSet();
 			var count:uint = 0;
 			while(true && count!=100){
 				
 				count++;
 				getAround();
 				if(openList!=null&&openList.size()>=1){
-					getMinF();
+					fghSet();
 					if(check()==0){
 						trace("找到了！");
 						//找到了
@@ -171,13 +144,15 @@
 				}
 				
 			}
+			
+		 		
 		
 		}
 		
 		/**
-		 * 找到最小的f
+		 * 设置各个节点的fgh值 并找出一个最小的
 		 */
-		private function getMinF():void{
+		private function fghSet():void{
 			//排序f
 				
 			var openArray:Array = openList.values();
@@ -196,115 +171,22 @@
 			
 			cNode = cuNode;
 			
+			
 		}
 		
 		private function findPathInCloseList():void{
+			MonsterDebugger.trace(this,openList,0xFF0000);
 			var nodeId:int =-1;
 				nodeId = Node(openList.get(aNode.id)).parentId;
-				
-				path.push(new Point(aNode.y,aNode.x));
 			while(nodeId!=-1){
 				var node:Node = Node(closeList.get(nodeId));
 				path.push(new Point(node.y,node.x));
 				nodeId = node.parentId;
 			}
-			
-			
 			if(path.length>1){
 				path = path.reverse();
 			}
-			trace("找到路径了:"+path);
-			//长度大于3才考虑优化
-			if(path.length>=3 && optimize){
-				path = optimizeit();
-			}
 		}
-		
-		
-		/**
-		 * 优化路径
-		 **/
-		private function optimizeit():Array{
-			trace("进入了optimizeit");
-				var __path:Array = new Array();
-				var _path:Array =  new Array();
-				var tmpList:Array =  new Array();
-				var lastX:int = -1;
-				var lastY:int = -1;
-				
-				//检测x
-				trace("-----------------");
-//				_path.push(path[0]);
-				trace("-----"+_path);
-				trace("-----------------");
-				for(var i:uint=1;i<path.length;i++){
-					lastX = path[i-1].x;
-					if(i==1 && path[i].x==lastX){
-						tmpList.push(path[0]);
-						tmpList.push(path[i]);
-					}else if(i==1 && path[i].x!=lastX){
-						_path.push(path[0]);
-						tmpList.push(path[i]);
-					}else if(i!=1 && path[i].x==lastX){
-						tmpList.push(path[i]);
-					}else{
-						tmpList.push(path[i]);
-						
-						if(tmpList.length==1){
-							_path.push(tmpList[0]);
-							trace("add:"+tmpList[0]);
-						}else if(tmpList.length>=2){
-							_path.push(tmpList[0]);
-							_path.push(tmpList[tmpList.length-1]);
-							trace("add1:"+tmpList[0]);
-							trace("add1:"+tmpList[tmpList.length-1]);
-						}else{
-							//
-						}
-						tmpList = null;
-						tmpList  = new Array();
-						trace("_path:"+_path);
-					}
-					
-				}
-				trace("过了循环一");
-				//检测y
-				tmpList =  new Array();
-//				__path.push(_path[0]);
-				for(i=1;i<_path.length;i++){
-					lastY = _path[i-1].y;
-					if(i==1 && path[i].y==lastY){
-						tmpList.push(path[0]);
-						tmpList.push(path[i]);
-					}else if(i==1 && path[i].y!=lastY){
-						__path.push(_path[0]);
-						tmpList.push(path[i]);
-					}else if(i!=1 && _path[i].y==lastY){
-						tmpList.push(_path[i]);
-					}else{
-						tmpList.push(_path[i]);
-						if(tmpList.length==1){
-							__path.push(tmpList[0]);
-							trace("2add:"+tmpList[0]);
-						}else if(tmpList.length>=2){
-							__path.push(tmpList[0]);
-							__path.push(tmpList[tmpList.length-1]);
-							trace("2add2:"+tmpList[0]);
-							trace("2add2:"+tmpList[tmpList.length-1]);
-						}else{
-							//
-						}
-						tmpList = null;
-						tmpList = new Array();
-					}
-					trace("__path:"+__path);
-				}
-				trace("过了循环二");
-				
-				trace("优化前路径："+path+"---");
-				trace("优化后路径："+__path+"---");
-				return __path;
-		} 
 		
 		private function check():int{
 			if(Node(openList.get(aNode.id))!=null){
@@ -312,5 +194,7 @@
 			}
 			return -1;
 		}
+		
+		
 	}
 }
