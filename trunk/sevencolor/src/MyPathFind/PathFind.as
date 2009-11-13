@@ -160,7 +160,6 @@
 				if(openList!=null&&openList.size()>=1){
 					getMinF();
 					if(check()==0){
-						trace("找到了！");
 						//找到了
 						findPathInCloseList();
 						break;
@@ -213,7 +212,6 @@
 			if(path.length>1){
 				path = path.reverse();
 			}
-			trace("找到路径了:"+path);
 			//长度大于3才考虑优化
 			if(path.length>=3 && optimize){
 				path = optimizeit();
@@ -221,87 +219,160 @@
 		}
 		
 		
+//		/**
+//		 * 优化路径
+//		 **/
+//		private function optimizeit():Array{
+//			trace("进入了optimizeit");
+//				var __path:Array = new Array();
+//				var _path:Array =  new Array();
+//				var tmpList:Array =  new Array();
+//				var lastX:int = -1;
+//				var lastY:int = -1;
+//				
+//				//检测x
+//				trace("-----------------");
+////				_path.push(path[0]);
+//				trace("-----"+_path);
+//				trace("-----------------");
+//				for(var i:uint=1;i<path.length;i++){
+//					lastX = path[i-1].x;
+//					if(i==1 && path[i].x==lastX){
+//						tmpList.push(path[0]);
+//						tmpList.push(path[i]);
+//					}else if(i==1 && path[i].x!=lastX){
+//						_path.push(path[0]);
+//						tmpList.push(path[i]);
+//					}else if(i!=1 && path[i].x==lastX){
+//						tmpList.push(path[i]);
+//					}else{
+//						tmpList.push(path[i]);
+//						
+//						if(tmpList.length==1){
+//							_path.push(tmpList[0]);
+//							trace("add:"+tmpList[0]);
+//						}else if(tmpList.length>=2){
+//							_path.push(tmpList[0]);
+//							_path.push(tmpList[tmpList.length-1]);
+//							trace("add1:"+tmpList[0]);
+//							trace("add1:"+tmpList[tmpList.length-1]);
+//						}else{
+//							//
+//						}
+//						tmpList = null;
+//						tmpList  = new Array();
+//						trace("_path:"+_path);
+//					}
+//					
+//				}
+//				trace("过了循环一");
+//				//检测y
+//				tmpList =  new Array();
+////				__path.push(_path[0]);
+//				for(i=1;i<_path.length;i++){
+//					lastY = _path[i-1].y;
+//					if(i==1 && path[i].y==lastY){
+//						tmpList.push(path[0]);
+//						tmpList.push(path[i]);
+//					}else if(i==1 && path[i].y!=lastY){
+//						__path.push(_path[0]);
+//						tmpList.push(path[i]);
+//					}else if(i!=1 && _path[i].y==lastY){
+//						tmpList.push(_path[i]);
+//					}else{
+//						tmpList.push(_path[i]);
+//						if(tmpList.length==1){
+//							__path.push(tmpList[0]);
+//							trace("2add:"+tmpList[0]);
+//						}else if(tmpList.length>=2){
+//							__path.push(tmpList[0]);
+//							__path.push(tmpList[tmpList.length-1]);
+//							trace("2add2:"+tmpList[0]);
+//							trace("2add2:"+tmpList[tmpList.length-1]);
+//						}else{
+//							//
+//						}
+//						tmpList = null;
+//						tmpList = new Array();
+//					}
+//					trace("__path:"+__path);
+//				}
+//				trace("过了循环二");
+//				
+//				trace("优化前路径："+path+"---");
+//				trace("优化后路径："+__path+"---");
+//				return __path;
+//		} 
 		/**
 		 * 优化路径
 		 **/
 		private function optimizeit():Array{
-			trace("进入了optimizeit");
+				var _path:Array = new Array();
 				var __path:Array = new Array();
-				var _path:Array =  new Array();
-				var tmpList:Array =  new Array();
-				var lastX:int = -1;
-				var lastY:int = -1;
 				
-				//检测x
-				trace("-----------------");
-//				_path.push(path[0]);
-				trace("-----"+_path);
-				trace("-----------------");
-				for(var i:uint=1;i<path.length;i++){
-					lastX = path[i-1].x;
-					if(i==1 && path[i].x==lastX){
-						tmpList.push(path[0]);
-						tmpList.push(path[i]);
-					}else if(i==1 && path[i].x!=lastX){
-						_path.push(path[0]);
-						tmpList.push(path[i]);
-					}else if(i!=1 && path[i].x==lastX){
-						tmpList.push(path[i]);
-					}else{
-						tmpList.push(path[i]);
-						
-						if(tmpList.length==1){
-							_path.push(tmpList[0]);
-							trace("add:"+tmpList[0]);
-						}else if(tmpList.length>=2){
-							_path.push(tmpList[0]);
-							_path.push(tmpList[tmpList.length-1]);
-							trace("add1:"+tmpList[0]);
-							trace("add1:"+tmpList[tmpList.length-1]);
-						}else{
-							//
+				var aimList :Array = new Array();
+				var lastPoint:Point = null;
+				var thisPoint:Point = null;
+				
+				var index:int = 0;
+				var _depth:int = path.length;
+				_path.push(path[0]);
+				while(index<_depth-1){
+					index++;
+					lastPoint = path[index-1];
+					thisPoint = path[index];
+						//判断是否最后 一个元素
+						if(index==_depth-1){
+							if(aimList.length>=1){
+								_path.push(aimList[aimList.length-1]);
+							}
+							_path.push(thisPoint);
+							break;
 						}
-						tmpList = null;
-						tmpList  = new Array();
-						trace("_path:"+_path);
+					if(thisPoint.x == lastPoint.x){
+						aimList.push(thisPoint);
+					}else{
+						if(aimList.length>=1){
+							_path.push(aimList[aimList.length-1]);
+						}
+						_path.push(thisPoint);
+						aimList = new Array();
 					}
+				}
+				
+				var tmpPath:Array = _path.concat();
+				if(tmpPath.length>=1){
 					
-				}
-				trace("过了循环一");
-				//检测y
-				tmpList =  new Array();
-//				__path.push(_path[0]);
-				for(i=1;i<_path.length;i++){
-					lastY = _path[i-1].y;
-					if(i==1 && path[i].y==lastY){
-						tmpList.push(path[0]);
-						tmpList.push(path[i]);
-					}else if(i==1 && path[i].y!=lastY){
-						__path.push(_path[0]);
-						tmpList.push(path[i]);
-					}else if(i!=1 && _path[i].y==lastY){
-						tmpList.push(_path[i]);
-					}else{
-						tmpList.push(_path[i]);
-						if(tmpList.length==1){
-							__path.push(tmpList[0]);
-							trace("2add:"+tmpList[0]);
-						}else if(tmpList.length>=2){
-							__path.push(tmpList[0]);
-							__path.push(tmpList[tmpList.length-1]);
-							trace("2add2:"+tmpList[0]);
-							trace("2add2:"+tmpList[tmpList.length-1]);
+					index = 0;
+					var __depth:int = tmpPath.length;
+					__path.push(_path[0]);
+					while(index<__depth-1){
+						index++;
+						lastPoint = tmpPath[index-1];
+						thisPoint = tmpPath[index];
+						
+							//判断是否最后 一个元素
+							if(index==__depth-1){
+								if(aimList.length>=1){
+									__path.push(aimList[aimList.length-1]);
+								}
+								__path.push(thisPoint);
+								break;
+							}
+						if(thisPoint.y == lastPoint.y){
+							aimList.push(thisPoint);
 						}else{
-							//
+							if(aimList.length>=1){
+								__path.push(aimList[aimList.length-1]);
+							}
+							__path.push(thisPoint);
+							aimList = new Array();
 						}
-						tmpList = null;
-						tmpList = new Array();
 					}
-					trace("__path:"+__path);
 				}
-				trace("过了循环二");
 				
 				trace("优化前路径："+path+"---");
+				trace("优化x路径："+_path+"---");
 				trace("优化后路径："+__path+"---");
 				return __path;
 		} 
