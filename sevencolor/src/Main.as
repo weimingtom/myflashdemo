@@ -84,8 +84,6 @@
 			var pf:PathFindv1 = new PathFindv1(_map);
 				pf.pathFind(new Point(1,3),new Point(3,3));
 			//如果找到路径
-			trace("已找到路径");
-			trace(pf.path);
 		}
 		
 		private function mouseHandler(e:MouseEvent){
