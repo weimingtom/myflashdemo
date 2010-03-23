@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"  width="542" height="328">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			public function test(event:Event){
+				if(input.text.length==0 || input.text.length>6){
+					input.text="吴雷";
+				}
+				
+				if(input.text.indexOf("猛")!=-1){
+					Alert.show(input.text+"，你太好了！");
+				}else if(input.text=="吴雷"){
+					
+					Alert.show(input.text+"，你是猪！点10下！");
+					Alert.show(input.text+"，你是猪！还有9下！");
+					Alert.show(input.text+"，你是猪！还有8下！");
+					Alert.show(input.text+"，你是猪！还有7下！");
+					Alert.show(input.text+"，你是猪！还有6下！");
+					Alert.show(input.text+"，你是猪！还有5下！");
+					Alert.show(input.text+"，你是猪！还有4下！");
+					Alert.show(input.text+"，你是猪！还有3下！");
+					Alert.show(input.text+"，你是猪！还有2下！");
+					Alert.show(input.text+"，你是猪！最后1下！");
+				}else{
+					Alert.show(input.text+"，你太2了！");
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Label text="输入名字:" x="161" y="122">
+	</mx:Label>
+	<mx:TextInput id="input" width="162" y="120" x="219" text="在这里输入你的名字(例如：吴雷)">
+	</mx:TextInput>
+	<mx:Button label="测试你2不2" click="test(event)" enabled="true" width="107" x="222" y="159">
+	</mx:Button>
+</mx:Application>

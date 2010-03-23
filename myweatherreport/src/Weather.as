@@ -54,9 +54,10 @@
 				
 			variables.theCityCode = city.text;
 			if(variables.theCityCode==""){
-				variables.theCityCode = "北京";
+				variables.theCityCode = "厦门";
 			}
-			variables.theUserID = "700eb4c54b7a461c8563bf5744d0f440";
+			//variables.theUserID = "fbb4dfbccd2440778626c30e42d5f039";
+			variables.theUserID = "";
 			//
 			// 配置 URLRequest, 设置目标路径, 设置提交的数据, 方法 (POST / GET)
 			//
@@ -182,8 +183,8 @@
 		}
 		function loader_progress (e:ProgressEvent):void {
 //			trace("ProgressEvent.PROGRESS");
-//			trace("读取了的字节 : " + loader.bytesLoaded);
-//			trace("文件总字节 : " + loader.bytesTotal);
+			trace("读取了的字节 : " + loader.bytesLoaded);
+			trace("文件总字节 : " + loader.bytesTotal);
 		}
 		function loader_security (e:SecurityErrorEvent):void {
 //			trace("SecurityErrorEvent.SECURITY_ERROR");
