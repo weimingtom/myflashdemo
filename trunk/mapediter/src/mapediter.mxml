@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" addedToStage="init()" width="700" height="500">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import com.Table;
+			public function init():void{
+				//Alert.show(this.toString());
+				
+				var table:Table = new Table(1024,768,60,30);
+				table.drawTables();
+				stage.addChild(table);
+//				this.width = 300;
+//				this.height = 200;
+			}
+		]]>
+	</mx:Script>
+	<mx:Panel id="myPanel" width="700" height="500">
+		
+	</mx:Panel>
+</mx:Application>
