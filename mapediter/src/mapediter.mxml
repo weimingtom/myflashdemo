@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" addedToStage="init()" verticalScrollPolicy="on">
-	<mx:Script>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" addedToStage="init()" layout="absolute">
+    	<mx:Script>
 		<![CDATA[
+			import com.ImgBox;
 			import com.Ball;
 			import com.Constant;
 			import mx.controls.Alert;
@@ -15,23 +16,44 @@
 			var yH:uint = 40;
 			
 			var flag : uint = 0 ;//标志默认为设置障碍(obstacle)   1为取消障碍
+			
+			var itemHeight:uint = 100;
+			
+			var imgBox : ImgBox ;
+			var imgBox2 : ImgBox ;
+			[Embed(source="images/bg.jpg")]
+			var imgClass:Class;
+			
 			public function init():void{
 				
+				imgBox2= new ImgBox();	
+				imgBox2.x=0;
+				imgBox2.y=0;
+				imgBox2.addChild(new Ball(4));
+				imgBox2.addEventListener(MouseEvent.CLICK,changClick);
+				
+				
+				imgBox= new ImgBox();	
 				var table:Table = new Table(mapW,mapH,xW,yH);
 				table.drawTables();
 				
-				[Embed(source="images/bg.jpg")]
-				var imgClass:Class;
+
 				
 				var image :Bitmap = new imgClass() as Bitmap
+				
+				imgBox.x=0;
+				imgBox.y=itemHeight;
 				image.x = 0;
 				image.y = 0;
 				table.x = 0;
 				table.y = 0;
-  				stage.addChild(image);
-				stage.addChild(table);
+
+  				imgBox.addChild(image);
+				imgBox.addChild(table);
+				imgBox.addEventListener(MouseEvent.CLICK,click);
 				
-				addEventListener(MouseEvent.CLICK,click);
+				stage.addChild(imgBox);
+				stage.addChild(imgBox2);
 				
 			}
 			
@@ -40,15 +62,15 @@
 				
 				
 				var thisx:int = e.stageX ;
-				var thisy:int = e.stageY ;
+				var thisy:int = e.stageY-itemHeight ;
 				
 				var thisxN:int  = thisx / xW ;
 				var thisyH:int  = thisy / yH ;
 				
-				if(thisx>( (int(mapW/xW))*xW )){
+				if(thisx>=( (int(mapW/xW))*xW )){
 					return;
 				}
-				if(thisy>( (int(mapH/yH))*yH)){
+				if(thisy>=( (int(mapH/yH))*yH)){
 					return;
 				}
 				
@@ -56,12 +78,10 @@
 				if(flag == 0){
 				
 					Constant.mapArray[thisyH][thisxN] = 1;
-					trace(Constant.mapArray[thisyH][thisxN]);
 					
 					drawObstacle(thisxN,thisyH);
 				}else if (flag == 1){
 					Constant.mapArray[thisyH][thisxN] = 0;
-					trace(Constant.mapArray[thisyH][thisxN]);
 					dropObstacle(thisxN,thisyH);
 				}else {
 				
@@ -70,19 +90,38 @@
 			}
 			
 			public function drawObstacle(thisxN:int,thisyH:int):void{
-		
+				var index:uint = thisxN*xW + thisyH;
 				var ball:Ball = new Ball(0);
-				ball.x = thisxN * xW;
-				ball.y =  thisyH * yH;
-				stage .addChild(ball);
-				Constant.ballMap.put(thisxN*xW + thisyH , ball);
+				ball.x = thisxN* xW;
+				ball.y = thisyH*yH;
+				
+				if(Constant.ballMap.get(index)==null){
+					imgBox.addChild(ball);
+					Constant.ballMap.put(index , ball);
+					trace(index);
+				}
+
+
  			}
  			
 			public function dropObstacle(thisxN:int,thisyH:int):void{
 				var index:uint = thisxN*xW + thisyH;
+				trace(index);
 				var ball:Ball = Constant.ballMap.get(index) as Ball;
-				stage.removeChild(ball);
-				Constant.ballMap.remove(index);
+				if(ball!=null){
+					imgBox.removeChild(ball);
+					Constant.ballMap.remove(index);
+				}
+
+ 			}
+			public function changClick(e:MouseEvent):void{
+				if(flag == 0){
+					flag = 1;
+				}else if (flag == 1){
+					flag =0 ;
+				}else {
+				
+				}
  			}
 			
 			
