@@ -2,6 +2,8 @@
 {
 	import flash.display.Sprite;
 	
+	import mx.controls.Alert;
+	
 	public class Table extends Sprite
 	{
 		//行格子数
@@ -19,10 +21,23 @@
 			this.yH = yH;
 			this.xN = mapW / this.xW;
 			this.yN = mapH / this.yH;
+			
+			var array : Array  =  new Array();
+			for(var i:uint = 0 ; i<xN ;i++){
+				array[i] = new Array();
+				for(var j:uint = 0 ; j<yN ;j++){
+					array[i][j] = 0;
+				}
+			}
+			
+			Constant.mapArray = array;
+			array = null;
+			trace(Constant.mapArray.toString());
+			
 			drawTables();
 		}
 		
-		public function drawTables(){
+		public function drawTables():void{
 			
 			this.graphics.beginFill(Constant.COLOR_2);
 			this.graphics.lineStyle(1, Constant.COLOR_3, 0.5, false,  "normal",  null,  null,  3);
