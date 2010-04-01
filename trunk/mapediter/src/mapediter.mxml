@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" addedToStage="init()" layout="absolute">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" addedToStage="init()" layout="absolute" doubleClick="enabled">
     	<mx:Script>
 		<![CDATA[
+			import fl.controls.TextArea;
 			import com.ImgBox;
 			import com.Ball;
 			import com.Constant;
@@ -23,7 +24,7 @@
 			var imgBox2 : ImgBox ;
 			[Embed(source="images/bg.jpg")]
 			var imgClass:Class;
-			
+			var dataText:TextArea;
 			public function init():void{
 				
 				imgBox2= new ImgBox();	
@@ -31,6 +32,7 @@
 				imgBox2.y=0;
 				imgBox2.addChild(new Ball(4));
 				imgBox2.addEventListener(MouseEvent.CLICK,changClick);
+				imgBox2.addEventListener(MouseEvent.DOUBLE_CLICK,doubleClick);
 				
 				
 				imgBox= new ImgBox();	
@@ -52,8 +54,18 @@
 				imgBox.addChild(table);
 				imgBox.addEventListener(MouseEvent.CLICK,click);
 				
+				
+				dataText = new TextArea();
+				dataText.x = 200;
+				dataText.y = 300;
+				dataText.width = 200;
+				dataText.height = 200;
+				dataText.visible = false;
+				dataText.addEventListener(MouseEvent.CLICK,close);
+				
 				stage.addChild(imgBox);
 				stage.addChild(imgBox2);
+				stage.addChild(dataText);
 				
 			}
 			
@@ -115,13 +127,29 @@
 
  			}
 			public function changClick(e:MouseEvent):void{
+				
+				dataText.text = Constant.mapArray.toLocaleString() ;
+				
 				if(flag == 0){
 					flag = 1;
+					dataText.visible = true;
 				}else if (flag == 1){
 					flag =0 ;
+					dataText.visible = false;
 				}else {
 				
 				}
+				
+				
+				
+//				Alert.show(Constant.mapArray.toLocaleString(),'title',4,imgBox2);
+//				trace(Constant.mapArray.toLocaleString());
+ 			}
+			public function doubleClick(e:MouseEvent):void{
+				
+ 			}
+			public function close(e:MouseEvent):void{
+				dataText.visible = false;
  			}
 			
 			
