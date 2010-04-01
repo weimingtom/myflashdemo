@@ -1,7 +1,13 @@
 ﻿package com
 {
+	import com.data.map.HashMap;
+	
 	public class Constant
 	{
+		
+		public static var mapArray : Array  =  new Array();
+		public static var ballMap : HashMap  =  new HashMap();
+		
 		public static const  COLOR_0:uint = 0x000000 ;
 		public static const  COLOR_1:uint = 0xFF0000 ;
 		public static const  COLOR_2:uint = 0xFFFF00 ;

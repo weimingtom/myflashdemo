@@ -1,21 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" addedToStage="init()" width="700" height="500">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" addedToStage="init()" verticalScrollPolicy="on">
 	<mx:Script>
 		<![CDATA[
+			import com.Ball;
+			import com.Constant;
 			import mx.controls.Alert;
+			import mx.controls.Image;
 			import com.Table;
+			
+			
+			var mapW:uint = 1024;
+			var mapH:uint = 768;
+			var xW:uint = 40;
+			var yH:uint = 40;
+			
+			var flag : uint = 0 ;//标志默认为设置障碍(obstacle)   1为取消障碍
 			public function init():void{
-				//Alert.show(this.toString());
 				
-				var table:Table = new Table(1024,768,60,30);
+				var table:Table = new Table(mapW,mapH,xW,yH);
 				table.drawTables();
+				
+				[Embed(source="images/bg.jpg")]
+				var imgClass:Class;
+				
+				var image :Bitmap = new imgClass() as Bitmap
+				image.x = 0;
+				image.y = 0;
+				table.x = 0;
+				table.y = 0;
+  				stage.addChild(image);
 				stage.addChild(table);
-//				this.width = 300;
-//				this.height = 200;
+				
+				addEventListener(MouseEvent.CLICK,click);
+				
 			}
+			
+			//设置障碍或者取消障碍
+			public function click(e:MouseEvent):void{
+				
+				
+				var thisx:int = e.stageX ;
+				var thisy:int = e.stageY ;
+				
+				var thisxN:int  = thisx / xW ;
+				var thisyH:int  = thisy / yH ;
+				
+				if(thisx>( (int(mapW/xW))*xW )){
+					return;
+				}
+				if(thisy>( (int(mapH/yH))*yH)){
+					return;
+				}
+				
+				
+				if(flag == 0){
+				
+					Constant.mapArray[thisyH][thisxN] = 1;
+					trace(Constant.mapArray[thisyH][thisxN]);
+					
+					drawObstacle(thisxN,thisyH);
+				}else if (flag == 1){
+					Constant.mapArray[thisyH][thisxN] = 0;
+					trace(Constant.mapArray[thisyH][thisxN]);
+					dropObstacle(thisxN,thisyH);
+				}else {
+				
+				}
+				
+			}
+			
+			public function drawObstacle(thisxN:int,thisyH:int):void{
+		
+				var ball:Ball = new Ball(0);
+				ball.x = thisxN * xW;
+				ball.y =  thisyH * yH;
+				stage .addChild(ball);
+				Constant.ballMap.put(thisxN*xW + thisyH , ball);
+ 			}
+ 			
+			public function dropObstacle(thisxN:int,thisyH:int):void{
+				var index:uint = thisxN*xW + thisyH;
+				var ball:Ball = Constant.ballMap.get(index) as Ball;
+				stage.removeChild(ball);
+				Constant.ballMap.remove(index);
+ 			}
+			
+			
+			
 		]]>
 	</mx:Script>
-	<mx:Panel id="myPanel" width="700" height="500">
-		
-	</mx:Panel>
 </mx:Application>
