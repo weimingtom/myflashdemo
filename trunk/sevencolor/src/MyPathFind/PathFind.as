@@ -213,9 +213,11 @@
 				path = path.reverse();
 			}
 			//长度大于3才考虑优化
-			if(path.length>=3 && optimize){
-				path = optimizeit();
-			}
+//			if(path.length>=3 && optimize){
+//				path = optimizeit();
+//			}
+			
+			trace(path);
 		}
 		
 		
