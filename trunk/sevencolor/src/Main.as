@@ -88,14 +88,8 @@
 		
 		private function mouseHandler(e:MouseEvent){
 			var path:Array = new Array();
-//			trace("e.localX"+e.localX);
-//			trace("e.localY"+e.localY);
-//			trace("e.stageX"+e.stageX);
-//			trace("e.stageY"+e.stageY);
 			var pointx:uint = e.stageX/40 ;
 			var pointy:uint = e.stageY/40 ;
-//			trace("e.pointx"+pointx);
-//			trace("e.pointy"+pointy);
 			
 			if(Ball(ballsMap.get(pointx+"-"+pointy))!=null){
 				startPoint = new Point(pointx,pointy);
@@ -110,14 +104,17 @@
 				
 				var pf:PathFind = new PathFind(map,true);
 				pf.pathFind(new Point(startPoint.x,startPoint.y),new Point(endPoint.x,endPoint.y));
-				//如果找到路径
 				path = pf.path;
+				trace(path.length);
 				
-				aimBall = Ball(ballsMap.get(startPoint.x+"-"+startPoint.y)) ;
-				
-				aimBall.setPath(path);
-				aimBall.move();
-				moveInPath();
+				//如果找到路径
+				if(path.length>0){
+					aimBall = Ball(ballsMap.get(startPoint.x+"-"+startPoint.y)) ;
+					
+					aimBall.setPath(path);
+					aimBall.move();
+					moveInPath();
+				}
 				
 			}
 			

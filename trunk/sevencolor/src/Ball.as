@@ -10,7 +10,7 @@
 		private var _pathDepth:uint=0;
 		private var _path :Array = null;
 		
-		private var _textfield:TextField = new TextField();
+		//private var _textfield:TextField = new TextField();
 		private var _flag :uint = 1;
 		
 		private var _color:uint;
@@ -34,10 +34,10 @@
 		}
 		
 		public function draw(){
-			_textfield.htmlText ="<font color=\"0xFFFFFF\" size=\"20\">"+ _flag.toString()+"</font>";
-			_textfield.x=17;
-			_textfield.y=17;
-			addChild(_textfield);
+			//_textfield.htmlText ="<font color=\"0xFFFFFF\" size=\"20\">"+ _flag.toString()+"</font>";
+			//_textfield.x=17;
+			//_textfield.y=17;
+			//addChild(_textfield);
 		}
 		
 		private function init(color:uint)
